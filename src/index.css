@@ -1,0 +1,53 @@
+/* ==========================================================================
+   GLOBAL DESIGN SCHEMES & CORE RESET ENGINE
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+    --font-primary: 'Poppins', sans-serif;
+    --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    --color-primary: #007bff;
+    --color-primary-hover: #0056b3;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-primary);
+    background-color: #f8fafc;
+    color: #0f172a;
+    overflow-x: hidden;
+    padding-top: 86px; /* Offset spacing context for the fixed navbar configuration */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark {
+    background-color: #070a13;
+    color: #f8fafc;
+}
+
+/* ==========================================================================
+   GLOBAL INTERSECTION OBSERVER REVEAL UTILITIES
+   ========================================================================== */
+.reveal {
+    opacity: 0;
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.fade-in { transform: scale(0.98); }
+.reveal.slide-up { transform: translateY(30px); }
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+@media (max-width: 868px) {
+    body {
+        padding-top: 80px;
+    }
+}

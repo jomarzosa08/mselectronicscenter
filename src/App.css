@@ -1,0 +1,176 @@
+/* ==========================================================================
+   UNIVERSAL BRAND NAVBAR HEADER
+   ========================================================================== */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center; /* Vertically centers everything cleanly */
+    padding: 20px 4%;
+    background: rgba(248, 250, 252, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 1000;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+body.dark .navbar {
+    background: rgba(7, 10, 19, 0.85);
+    border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.logo-img {
+    width: 46px;
+    height: 46px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.brand h2 {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+}
+
+.brand p {
+    font-size: 11px;
+    color: #64748b;
+}
+
+body.dark .brand p {
+    color: #94a3b8;
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    order: 3;
+}
+
+.dark-toggle {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background-color: #0f172a;
+    transition: var(--transition-smooth);
+}
+
+body.dark .hamburger span {
+    background-color: #f8fafc;
+}
+
+.nav-links {
+    display: flex;
+    gap: 32px;
+    margin-left: auto; 
+}
+
+.nav-links a {
+    font-size: 14px;
+    font-weight: 500;
+    color: #475569;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+body.dark .nav-links a {
+    color: #94a3b8;
+}
+
+.nav-links a:hover,
+.nav-links a.active-nav {
+    color: var(--color-primary);
+}
+
+body.dark .nav-links a:hover,
+body.dark .nav-links a.active-nav {
+    color: #3b82f6;
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-left: 32px; 
+}
+
+.dark-toggle {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* ==========================================================================
+   UNIVERSAL REUSED FOOTER COMPONENT
+   ========================================================================== */
+.footer {
+    padding: 40px 24px;
+    text-align: center;
+    background-color: #0f172a;
+    color: #94a3b8;
+    font-size: 13px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+body.dark .footer {
+    background-color: #03050a;
+}
+
+/* ==========================================================================
+   MOBILE DRIVING ENGINE MATRIX
+   ========================================================================== */
+@media (max-width: 868px) {
+    .hamburger { display: flex; }
+    .hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .nav-links {
+        position: fixed;
+        top: 80px;
+        left: 0;
+        width: 100%;
+        height: calc(100vh - 80px);
+        background-color: #f8fafc;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 60px;
+        gap: 40px;
+        transform: translateX(100%);
+        transition: transform 0.4s ease;
+        z-index: 999;
+    }
+
+    body.dark .nav-links { background-color: #070a13; }
+    .nav-links.open { transform: translateX(0); }
+}
