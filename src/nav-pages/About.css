@@ -1,0 +1,453 @@
+/* ==========================================================================
+   ABOUT US COMPONENT SPECIFIC LAYOUT MATRIX (ABOUT.CSS)
+   ========================================================================== */
+
+/* ==========================================================================
+   INNER SUB-HERO SECTION 
+   ========================================================================== */
+.inner-hero {
+    position: relative;
+    width: 100%;
+    height: 45vh;
+    min-height: 320px;
+    display: flex;
+    align-items: center;
+    padding: 0 8%;
+    background-color: #0c111d; /* Deep slate baseline */
+    border-bottom: 4px solid var(--color-primary);
+}
+
+/* Reusing your hero typographical weights with localized spatial breathing */
+.inner-hero .hero-content h1 {
+    font-size: 46px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    color: #ffffff;
+    margin-bottom: 12px;
+    line-height: 1.2;
+}
+
+.inner-hero .hero-content p {
+    font-size: 16px;
+    color: #94a3b8;
+}
+
+/* ==========================================================================
+   CORE ABOUT CONTAINER WRAPPERS & GRIDS
+   ========================================================================== */
+.about-section {
+    padding: 80px 0;
+    background-color: #f8fafc;
+}
+
+body.dark .about-section {
+    background-color: #070a13;
+}
+
+.about-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 4%;
+}
+
+/* Split design: Story vs Legal parameters */
+.about-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 50px;
+    margin-bottom: 80px;
+    align-items: start;
+}
+
+.about-text-block .about-sub {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--color-primary);
+    display: block;
+    margin-bottom: 12px;
+}
+
+.about-text-block h2 {
+    font-size: 36px;
+    font-family: serif, system-ui;
+    margin-bottom: 24px;
+    font-weight: 500;
+}
+
+.about-text-block p {
+    font-size: 15px;
+    line-height: 1.65;
+    color: #475569;
+    margin-bottom: 20px;
+}
+
+body.dark .about-text-block p {
+    color: #cbd5e1;
+}
+
+/* ==========================================================================
+   COMPLIANCE & LEGAL CARD INFRASTRUCTURE
+   ========================================================================== */
+.legal-card {
+    background-color: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    padding: 40px;
+    border-radius: 4px;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.02);
+}
+
+body.dark .legal-card {
+    background-color: #0f172a;
+    border-color: rgba(255, 255, 255, 0.06);
+}
+
+.legal-card h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.legal-card p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #64748b;
+    margin-bottom: 24px;
+}
+
+body.dark .legal-card p {
+    color: #94a3b8;
+}
+
+.legal-list {
+    list-style: none;
+    margin-bottom: 24px;
+}
+
+.legal-list li {
+    font-size: 14px;
+    padding: 12px 16px;
+    background: #f1f5f9;
+    margin-bottom: 8px;
+    border-left: 3px solid var(--color-primary);
+    color: #334155;
+}
+
+body.dark .legal-list li {
+    background: #1e293b;
+    color: #cbd5e1;
+}
+
+.legal-notice {
+    font-size: 13px !important;
+    font-style: italic;
+    border-top: 1px dashed rgba(15, 23, 42, 0.1);
+    padding-top: 16px;
+    margin-bottom: 0 !important;
+}
+
+body.dark .legal-notice {
+    border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ==========================================================================
+   TECHNICAL FORCE PROFILE BLOCK
+   ========================================================================== */
+.team-block {
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    padding: 50px;
+    margin-bottom: 80px;
+    border-radius: 4px;
+}
+
+body.dark .team-block {
+    background: #0f172a;
+    border-color: rgba(255, 255, 255, 0.06);
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+}
+
+.team-img-frame {
+    width: 100%;
+    height: 100%;
+    min-height: 320px;
+    max-height: 400px;
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.team-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.team-img-frame:hover .team-img {
+    transform: scale(1.03);
+}
+
+.team-details h2 {
+    font-size: 32px;
+    font-family: serif, system-ui;
+    margin: 8px 0 20px 0;
+    font-weight: 500;
+}
+
+.team-details p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #475569;
+    margin-bottom: 24px;
+}
+
+body.dark .team-details p {
+    color: #cbd5e1;
+}
+
+/* STATS DATA MATRIX TABLE */
+.stats-table {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.table-row {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 14px;
+    color: #475569;
+}
+
+body.dark .table-row {
+    border-bottom-color: #334155;
+    color: #cbd5e1;
+}
+
+.table-row span {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--color-primary);
+    width: 35px;
+}
+
+.chart-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: var(--transition-smooth);
+}
+
+.chart-btn:hover {
+    background-color: var(--color-primary);
+    color: #ffffff;
+}
+
+/* ==========================================================================
+   TECHNICAL FIELD CAPABILITIES ZONE
+   ========================================================================== */
+.capabilities-zone {
+    padding: 60px 0 80px 0;
+    border-top: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+body.dark .capabilities-zone {
+    border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+.capabilities-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.capabilities-tag-line {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--color-primary);
+}
+
+.section-title {
+    font-size: 36px;
+    font-family: serif, system-ui;
+    margin-top: 8px;
+    font-weight: 500;
+}
+
+.capabilities-divider {
+    width: 60px;
+    height: 3px;
+    background-color: var(--color-primary);
+    margin: 16px auto 0 auto;
+}
+
+.capabilities-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.capability-card {
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    padding: 40px 30px;
+    text-align: center;
+    border-radius: 4px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+body.dark .capability-card {
+    background: #0f172a;
+    border-color: rgba(255, 255, 255, 0.04);
+}
+
+.capability-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+}
+
+.capability-icon-window {
+    width: 70px;
+    height: 70px;
+    background-color: #f1f5f9;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px auto;
+}
+
+body.dark .capability-icon-window {
+    background-color: #1e293b;
+}
+
+.capability-icon {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.capability-card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.capability-card p {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: #64748b;
+}
+
+body.dark .capability-card p {
+    color: #94a3b8;
+}
+
+/* ==========================================================================
+   PARTNERS TECHNOLOGY & TECH BADGES
+   ========================================================================== */
+.partners-block {
+    text-align: center;
+    padding: 50px 40px;
+    border-top: 1px dashed rgba(15, 23, 42, 0.12);
+}
+
+body.dark .partners-block {
+    border-top-color: rgba(255, 255, 255, 0.12);
+}
+
+.partners-block h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.partners-block p {
+    font-size: 14px;
+    color: #64748b;
+    margin-bottom: 24px;
+}
+
+body.dark .partners-block p {
+    color: #94a3b8;
+}
+
+.brand-badges {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 30px;
+}
+
+.badge-item {
+    background-color: #0f172a;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 8px 24px;
+    letter-spacing: 1px;
+}
+
+body.dark .badge-item {
+    background-color: #334155;
+}
+
+.guarantee-text {
+    font-size: 13px !important;
+    color: #475569 !important;
+    margin-bottom: 0 !important;
+}
+
+body.dark .guarantee-text {
+    color: #cbd5e1 !important;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN BREAKPOINTS
+   ========================================================================== */
+@media (max-width: 1024px) {
+    .about-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    .team-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+    .capabilities-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .inner-hero .hero-content h1 {
+        font-size: 34px;
+    }
+    .team-block {
+        padding: 30px;
+    }
+    .capabilities-grid {
+        grid-template-columns: 1fr;
+    }
+    .about-text-block h2, .team-details h2, .section-title {
+        font-size: 28px;
+    }
+}

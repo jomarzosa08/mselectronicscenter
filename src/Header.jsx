@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
-import './App.css'
+import './index.css'
 
-function Header() {
+// CRITICAL: Ensure { currentPage, setCurrentPage } are listed inside the parentheses here!
+function Header({ currentPage, setCurrentPage }) {
   const [isDarkMode, setIsDarkMode] = useState(false)
   const [isNavOpen, setIsNavOpen] = useState(false)
 
-  // Synchronize dark theme state across the DOM element tree
   useEffect(() => {
     if (isDarkMode) {
       document.body.classList.add('dark')
@@ -13,6 +13,15 @@ function Header() {
       document.body.classList.remove('dark')
     }
   }, [isDarkMode])
+
+  // Custom click handler to tell main.jsx to change the view
+  const handlePageSwitch = (e, targetPage) => {
+    e.preventDefault(); // Keeps the page from doing a full refresh
+    if (setCurrentPage) {
+      setCurrentPage(targetPage); // Changes 'home' to 'about' or vice-versa
+    }
+    setIsNavOpen(false); // Closes mobile menu drawer
+  }
 
   return (
     <header className="navbar reveal fade-in active">
@@ -27,6 +36,27 @@ function Header() {
           <p>Cebu's Trusted Electronics Specialist</p>
         </div>
       </div>
+
+      {/* Your updated navigation links block */}
+      <nav className={`nav-links ${isNavOpen ? 'open' : ''}`} id="nav-links">
+        <a 
+          href="#" 
+          className={currentPage === 'home' ? 'active-nav' : ''} 
+          onClick={(e) => handlePageSwitch(e, 'home')}
+        >
+          Home
+        </a>
+        <a 
+          href="#" 
+          className={currentPage === 'about' ? 'active-nav' : ''} 
+          onClick={(e) => handlePageSwitch(e, 'about')}
+        >
+          About Us
+        </a>
+        <a href="#" onClick={() => setIsNavOpen(false)}>Contact Us</a>
+        <a href="#" onClick={() => setIsNavOpen(false)}>Products</a>
+        <a href="#" onClick={() => setIsNavOpen(false)}>Partnership</a>
+      </nav>
 
       <div className="nav-actions">
         <button 
@@ -45,14 +75,6 @@ function Header() {
           <span></span><span></span><span></span>
         </button>
       </div>
-
-      <nav className={`nav-links ${isNavOpen ? 'open' : ''}`} id="nav-links">
-        <a href="home.html" className="active-nav" onClick={() => setIsNavOpen(false)}>Home</a>
-        <a href="about.html" onClick={() => setIsNavOpen(false)}>About Us</a>
-        <a href="contact.html" onClick={() => setIsNavOpen(false)}>Contact Us</a>
-        <a href="#" onClick={() => setIsNavOpen(false)}>Products</a>
-        <a href="partnership.html" onClick={() => setIsNavOpen(false)}>Partnership</a>
-      </nav>
     </header>
   )
 }

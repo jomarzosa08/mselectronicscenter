@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react'
-import Header from './Header'
-import Footer from './Footer'
-import './index.css' 
+import '../index.css'
 import './Home.css'  
 
 function Home() {
@@ -56,7 +54,7 @@ function Home() {
 
   return (
     <>
-      <Header />
+      {/* REMOVED DUPLICATE <Header /> - Handled seamlessly by main.jsx */}
 
       {/* HERO SECTION */}
       <section className="hero">
@@ -170,7 +168,7 @@ function Home() {
         </div>
       )}
 
-      <Footer />
+      {/* REMOVED DUPLICATE <Footer /> - Handled seamlessly by main.jsx */}
     </>
   )
 }
