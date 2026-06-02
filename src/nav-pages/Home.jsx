@@ -1,11 +1,12 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import '../index.css'
 import './Home.css'  
 
 function Home() {
   const [activeModalPost, setActiveModalPost] = useState(null)
-  const viewportRef = useRef(null)
-  const isInteractingRef = useRef(false)
+  
+  // Mobile active index pointer state matrix
+  const [mobileIndex, setMobileIndex] = useState(0)
 
   const services = [
     { id: 'srv1', title: 'Digital/Analog Trunking Repeater System', img: 'https://mselectronicscenter.com/wp-content/uploads/2024/04/img_7803.jpeg', link: '#' },
@@ -36,10 +37,8 @@ function Home() {
     }
   ]
 
-  // Double the array for infinite-feeling scrolling layouts
   const doubledServices = [...services, ...services]
 
-  // 1. Reveal Animations Observer
   useEffect(() => {
     const reveals = document.querySelectorAll('.reveal')
     const observerOptions = { root: null, threshold: 0.1 }
@@ -56,68 +55,14 @@ function Home() {
     return () => reveals.forEach((element) => revealObserver.unobserve(element))
   }, [])
 
-// 2. TRUE SEAMLESS INFINITE LOOP ENGINE (FOR DESKTOP & MOBILE SWIPING)
-useEffect(() => {
-  const viewport = viewportRef.current
-  if (!viewport) return
-
-  let autoScrollInterval
-
-  // Calculate the width of one complete set of cards
-  const getHalfScrollWidth = () => viewport.scrollWidth / 2
-
-  const startAutoScroll = () => {
-    autoScrollInterval = setInterval(() => {
-      if (!isInteractingRef.current) {
-        const halfWidth = getHalfScrollWidth()
-        
-        // If we are approaching or past the half-way mark (end of first array set)
-        if (viewport.scrollLeft >= halfWidth) {
-          // Instantly snap back to start silently, then scroll smoothly
-          viewport.scrollLeft = viewport.scrollLeft - halfWidth
-        }
-        
-        viewport.scrollBy({ left: 280, behavior: 'smooth' })
-      }
-    }, 3000) // Moves automatically every 3 seconds
+  // Infinite Button Navigation Handlers for Mobile Controls
+  const handleNextMobile = () => {
+    setMobileIndex((prevIndex) => (prevIndex + 1) % services.length)
   }
 
-  // This handles manual finger swipes. If they swipe to the end or start, it snaps instantly.
-  const handleScrollReset = () => {
-    const halfWidth = getHalfScrollWidth()
-    
-    if (viewport.scrollLeft >= halfWidth) {
-      // User swiped into the second set: snap back to the first set invisibly
-      viewport.scrollLeft -= halfWidth
-    } else if (viewport.scrollLeft <= 0) {
-      // User swiped backward past the start: snap ahead to the twin card invisibly
-      viewport.scrollLeft += halfWidth
-    }
+  const handlePrevMobile = () => {
+    setMobileIndex((prevIndex) => (prevIndex - 1 + services.length) % services.length)
   }
-
-  const handleInteractionStart = () => { isInteractingRef.current = true }
-  const handleInteractionEnd = () => { isInteractingRef.current = false }
-
-  startAutoScroll()
-
-  // Listeners for infinite scroll normalization
-  viewport.addEventListener('scroll', handleScrollReset, { passive: true })
-  
-  // Touch & Gesture controls
-  viewport.addEventListener('touchstart', handleInteractionStart, { passive: true })
-  viewport.addEventListener('touchend', handleInteractionEnd, { passive: true })
-  viewport.addEventListener('mouseenter', handleInteractionStart)
-  viewport.addEventListener('mouseleave', handleInteractionEnd)
-
-  return () => {
-    clearInterval(autoScrollInterval)
-    viewport.removeEventListener('scroll', handleScrollReset)
-    viewport.removeEventListener('touchstart', handleInteractionStart)
-    viewport.removeEventListener('touchend', handleInteractionEnd)
-    viewport.removeEventListener('mouseenter', handleInteractionStart)
-    viewport.removeEventListener('mouseleave', handleInteractionEnd)
-  }
-}, [])
 
   return (
     <>
@@ -156,14 +101,29 @@ useEffect(() => {
       {/* EXPERTISE CAROUSEL TRACK */}
       <section className="expertise">
         <div className="expertise-header-block">
-          <span className="expertise-subtitle">What We Do Best</span>
-          <h2 className="expertise-main-title">Field of Expertise</h2>
-          <a href="#expertise-gallery" className="expertise-global-link">Explore Services</a>
+          <div>
+            <span className="expertise-subtitle">What We Do Best</span>
+            <h2 className="expertise-main-title">Field of Expertise</h2>
+          </div>
+          
+          {/* Action Header Interface */}
+          <div className="expertise-actions-wrapper">
+            <a href="#expertise-gallery" className="expertise-global-link">Explore Services</a>
+            
+            {/* Nav controls visible exclusively on mobile views */}
+            <div className="carousel-mobile-nav-buttons">
+              <button className="nav-ctrl-btn prev" onClick={handlePrevMobile} aria-label="Previous Slide">←</button>
+              <button className="nav-ctrl-btn next" onClick={handleNextMobile} aria-label="Next Slide">→</button>
+            </div>
+          </div>
         </div>
 
-        {/* 💡 Linked Ref Node to run Javascript layout calculations flawlessly */}
-        <div className="expertise-carousel-viewport" id="expertise-gallery" ref={viewportRef}>
-          <div className="expertise-track">
+        <div className="expertise-carousel-viewport" id="expertise-gallery">
+          {/* Mobile applies an inline transform matrix offset multiplier controlled by state updates */}
+          <div 
+            className="expertise-track"
+            style={{ '--mobile-slide-offset': `-${mobileIndex * 84}vw` }}
+          >
             {doubledServices.map((service, index) => (
               <div 
                 key={`${service.id}-${index}`}
