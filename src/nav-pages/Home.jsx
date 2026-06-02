@@ -64,7 +64,11 @@ function Home() {
           alt="Hero Background"
         />
         <div className="hero-content reveal slide-up">
-          <h1>WELCOME TO MS ELECTRONICS</h1>
+          {/* Aligned by forcing MS ELECTRONICS onto a clear, stacked line layout */}
+          <h1>
+            WELCOME TO <br />
+            <span className="hero-brand-title">MS ELECTRONICS</span>
+          </h1>
           <p>Your all-around electronics expert.</p>
           <div className="hero-actions">
             <a href="contact" className="hero-cta-btn">
