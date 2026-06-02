@@ -43,6 +43,12 @@
     margin-bottom: 16px;
 }
 
+.hero-brand-title {
+    display: inline-block;
+    margin-top: 4px;
+    letter-spacing: -0.5px;
+}
+
 .hero-content p {
     font-size: 18px;
     color: #cbd5e1;

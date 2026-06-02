@@ -1,8 +1,11 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import '../index.css' // Steps out to root src/ folder
 import './About.css'  // Local styling sheet for About page
 
 function About() {
+  // State to manage the active enlarged modal image
+  const [activeImage, setActiveImage] = useState(null);
+
   useEffect(() => {
     // Smooth scroll to top instantly upon entering view state
     window.scrollTo({ top: 0, behavior: 'instant' })
@@ -22,6 +25,17 @@ function About() {
     reveals.forEach((element) => revealObserver.observe(element))
     return () => reveals.forEach((element) => revealObserver.unobserve(element))
   }, [])
+
+  // Helper modules to open and close modal window states safely
+  const openImage = (src, alt) => {
+    setActiveImage({ src, alt });
+    document.body.style.overflow = 'hidden'; // Lock main scroll grid
+  };
+
+  const closeModal = () => {
+    setActiveImage(null);
+    document.body.style.overflow = ''; // Unlock background scroll grid
+  };
 
   return (
     <>
@@ -48,10 +62,36 @@ function About() {
             <div className="legal-card reveal fade-in">
               <h3>Authorized &amp; Fully Compliant</h3>
               <p>MS Electronics Center holds all necessary legal permits issued by regulatory bodies to address large-scale industry requirements securely:</p>
-              <ul class="legal-list">
-                <li><strong>DTI Permit No.</strong> 3061177</li>
-                <li><strong>NTC Dealer Permit No.</strong> 10-REDP-CEB-01005</li>
+              
+              <ul className="legal-list unified-badge-list">
+                <li>
+                  <div className="legal-badge-img-wrapper">
+                    {/* ↙ PLACE YOUR DTI LOGO IMAGE URL HERE ↙ */}
+                    <img 
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Department_of_Trade_and_Industry_%28DTI%29.svg/500px-Department_of_Trade_and_Industry_%28DTI%29.svg.png" 
+                      alt="DTI Logo" 
+                      className="legal-logo-icon" 
+                    />
+                  </div>
+                  <div>
+                    <strong>DTI Permit No.</strong> 3061177
+                  </div>
+                </li>
+                <li>
+                  <div className="legal-badge-img-wrapper">
+                    {/* ↙ PLACE YOUR NTC LOGO IMAGE URL HERE ↙ */}
+                    <img 
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/National_Telecommunications_Commission.svg/3840px-National_Telecommunications_Commission.svg.png" 
+                      alt="NTC Logo" 
+                      className="legal-logo-icon" 
+                    />
+                  </div>
+                  <div>
+                    <strong>NTC Dealer Permit No.</strong> 10-REDP-CEB-01005
+                  </div>
+                </li>
               </ul>
+              
               <p className="legal-notice">Granted full authorization by the <strong>National Telecommunications Commission (NTC)</strong> for the purchase, sale, installation, repair, design, maintenance, and fabrication of mast towers and advanced antenna systems.</p>
             </div>
           </div>
@@ -59,7 +99,10 @@ function About() {
           {/* EXPERT TECHNICAL TEAM FORCE */}
           <div className="team-block">
             <div className="team-grid">
-              <div className="team-img-frame reveal fade-in">
+              <div 
+                className="team-img-frame reveal fade-in clickable-about-img"
+                onClick={() => openImage("https://mselectronicscenter.com/wp-content/uploads/2024/04/img_6294.jpg?w=768&amp;h=575", "MS Electronics Team Group Photo")}
+              >
                 <img src="https://mselectronicscenter.com/wp-content/uploads/2024/04/img_6294.jpg?w=768&amp;h=575" alt="MS Electronics Team Group Photo" className="team-img" />
               </div>
               <div className="team-details reveal slide-up">
@@ -92,29 +135,56 @@ function About() {
                 
                 {/* Capability Card 1 */}
                 <div className="capability-card reveal fade-in">
-                  <div className="capability-icon-window">
-                    <img src="https://cdn-icons-png.flaticon.com/512/11748/11748136.png" alt="Tower Infrastructure" className="capability-icon" />
+                  <div 
+                    className="capability-img-frame clickable-about-img"
+                    onClick={() => openImage("https://mselectronicscenter.com/wp-content/uploads/2024/04/img_4641.jpeg?w=NaN&h=", "Busay Relay Station Tower Infrastructure")}
+                  >
+                    <img 
+                      src="https://mselectronicscenter.com/wp-content/uploads/2024/04/img_4641.jpeg?w=NaN&h=" 
+                      alt="Busay Relay Station Tower Infrastructure" 
+                      className="capability-cover-img" 
+                    />
                   </div>
-                  <h3>Busay Relay Station</h3>
-                  <p>We own and operate a premium independent <strong>MARCONI Repeater Site</strong> located at Busay, Cebu City to provide strong signal coverage.</p>
+                  <div className="capability-content-body">
+                    <h3>Busay Relay Station</h3>
+                    <p>We own and operate a premium independent <strong>MARCONI Repeater Site</strong> located at Busay, Cebu City to provide strong signal coverage.</p>
+                  </div>
                 </div>
 
                 {/* Capability Card 2 */}
                 <div className="capability-card reveal fade-in">
-                  <div className="capability-icon-window">
-                    <img src="https://cdn-icons-png.flaticon.com/512/649/649776.png" alt="Testing Gear" className="capability-icon" />
+                  <div 
+                    className="capability-img-frame clickable-about-img"
+                    onClick={() => openImage("https://mselectronicscenter.com/wp-content/uploads/2024/04/img_4664.jpeg?w=NaN&h=", "Precision Diagnostics Engineering Equipment")}
+                  >
+                    <img 
+                      src="https://mselectronicscenter.com/wp-content/uploads/2024/04/img_4664.jpeg?w=NaN&h=" 
+                      alt="Precision Diagnostics Engineering Equipment" 
+                      className="capability-cover-img" 
+                    />
                   </div>
-                  <h3>Precision Diagnostics</h3>
-                  <p>Equipped with <strong>two (2) complete sets of communication tester models</strong> for component verification and signal calibration tuning.</p>
+                  <div className="capability-content-body">
+                    <h3>Precision Diagnostics</h3>
+                    <p>Equipped with <strong>two (2) complete sets of communication tester models</strong> for component verification and signal calibration tuning.</p>
+                  </div>
                 </div>
 
                 {/* Capability Card 3 */}
                 <div className="capability-card reveal fade-in">
-                  <div className="capability-icon-window">
-                    <img src="https://cdn-icons-png.flaticon.com/512/9017/9017603.png" alt="Logistics Fleet" className="capability-icon" />
+                  <div 
+                    className="capability-img-frame clickable-about-img"
+                    onClick={() => openImage("https://mselectronicscenter.com/wp-content/uploads/2024/04/img_5723.jpeg", "MS Electronics Center Service Logistics Fleet")}
+                  >
+                    <img 
+                      src="https://mselectronicscenter.com/wp-content/uploads/2024/04/img_5723.jpeg" 
+                      alt="MS Electronics Center Service Logistics Fleet" 
+                      className="capability-cover-img" 
+                    />
                   </div>
-                  <h3>Mobile Logistics Fleet</h3>
-                  <p>Deploying fast technical response capabilities with a fleet consisting of a Toyota Hi-Ace Pick-up 4x4, two Mitsubishi FB vehicles, and two XRM motorcycles.</p>
+                  <div className="capability-content-body">
+                    <h3>Mobile Logistics Fleet</h3>
+                    <p>Deploying fast technical response capabilities with a fleet consisting of a Toyota Hi-Ace Pick-up 4x4, two Mitsubishi FB vehicles, and two XRM motorcycles.</p>
+                  </div>
                 </div>
 
               </div>
@@ -134,6 +204,17 @@ function About() {
 
         </div>
       </section>
+
+      {/* GLOBAL LIGHTBOX MODAL PORTAL */}
+      {activeImage && (
+        <div className="about-lightbox-overlay" onClick={closeModal}>
+          <button className="about-lightbox-close" onClick={closeModal}>&times;</button>
+          <div className="about-lightbox-content" onClick={(e) => e.stopPropagation()}>
+            <img src={activeImage.src} alt={activeImage.alt} />
+            <p className="about-lightbox-caption">{activeImage.alt}</p>
+          </div>
+        </div>
+      )}
     </>
   )
 }
