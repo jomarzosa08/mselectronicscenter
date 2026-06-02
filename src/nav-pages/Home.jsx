@@ -4,9 +4,6 @@ import './Home.css'
 
 function Home() {
   const [activeModalPost, setActiveModalPost] = useState(null)
-  
-  // Mobile active index pointer state matrix
-  const [mobileIndex, setMobileIndex] = useState(0)
 
   const services = [
     { id: 'srv1', title: 'Digital/Analog Trunking Repeater System', img: 'https://mselectronicscenter.com/wp-content/uploads/2024/04/img_7803.jpeg', link: '#' },
@@ -55,17 +52,10 @@ function Home() {
     return () => reveals.forEach((element) => revealObserver.unobserve(element))
   }, [])
 
-  // Infinite Button Navigation Handlers for Mobile Controls
-  const handleNextMobile = () => {
-    setMobileIndex((prevIndex) => (prevIndex + 1) % services.length)
-  }
-
-  const handlePrevMobile = () => {
-    setMobileIndex((prevIndex) => (prevIndex - 1 + services.length) % services.length)
-  }
-
   return (
     <>
+      {/* REMOVED DUPLICATE <Header /> - Handled seamlessly by main.jsx */}
+
       {/* HERO SECTION */}
       <section className="hero">
         <img 
@@ -74,10 +64,7 @@ function Home() {
           alt="Hero Background"
         />
         <div className="hero-content reveal slide-up">
-          <h1>
-            WELCOME TO <br />
-            <span className="hero-brand-title">MS ELECTRONICS</span>
-          </h1>
+          <h1>WELCOME TO MS ELECTRONICS</h1>
           <p>Your all-around electronics expert.</p>
           <div className="hero-actions">
             <a href="contact" className="hero-cta-btn">
@@ -101,29 +88,13 @@ function Home() {
       {/* EXPERTISE CAROUSEL TRACK */}
       <section className="expertise">
         <div className="expertise-header-block">
-          <div>
-            <span className="expertise-subtitle">What We Do Best</span>
-            <h2 className="expertise-main-title">Field of Expertise</h2>
-          </div>
-          
-          {/* Action Header Interface */}
-          <div className="expertise-actions-wrapper">
-            <a href="#expertise-gallery" className="expertise-global-link">Explore Services</a>
-            
-            {/* Nav controls visible exclusively on mobile views */}
-            <div className="carousel-mobile-nav-buttons">
-              <button className="nav-ctrl-btn prev" onClick={handlePrevMobile} aria-label="Previous Slide">←</button>
-              <button className="nav-ctrl-btn next" onClick={handleNextMobile} aria-label="Next Slide">→</button>
-            </div>
-          </div>
+          <span className="expertise-subtitle">What We Do Best</span>
+          <h2 className="expertise-main-title">Field of Expertise</h2>
+          <a href="#expertise-gallery" className="expertise-global-link">Explore Services</a>
         </div>
 
         <div className="expertise-carousel-viewport" id="expertise-gallery">
-          {/* Mobile applies an inline transform matrix offset multiplier controlled by state updates */}
-          <div 
-            className="expertise-track"
-            style={{ '--mobile-slide-offset': `-${mobileIndex * 84}vw` }}
-          >
+          <div className="expertise-track">
             {doubledServices.map((service, index) => (
               <div 
                 key={`${service.id}-${index}`}
@@ -196,6 +167,8 @@ function Home() {
           </div>
         </div>
       )}
+
+      {/* REMOVED DUPLICATE <Footer /> - Handled seamlessly by main.jsx */}
     </>
   )
 }

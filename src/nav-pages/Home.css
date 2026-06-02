@@ -105,11 +105,53 @@ body.dark .description p { color: #cbd5e1; }
 }
 
 /* ==========================================================================
-   EXPERTISE INFINITE BUTTON CAROUSEL MATRIX (HOME.CSS)
+   AUTOMATED HORIZONTAL INFINITE CAROUSEL ENGINE
    ========================================================================== */
+.expertise {
+    --mask-gradient: linear-gradient(to top, rgba(15, 23, 42, 0.95) 10%, rgba(15, 23, 42, 0.4) 60%, rgba(15, 23, 42, 0.1) 100%);
+    padding: 60px 0 100px 0;
+}
+
+body.dark .expertise {
+    --mask-gradient: linear-gradient(to top, #070a13 15%, rgba(7, 10, 19, 0.5) 65%, rgba(7, 10, 19, 0.1) 100%);
+}
+
+.expertise-header-block {
+    text-align: center;
+    padding: 0 24px 60px 24px;
+}
+
+.expertise-subtitle {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--color-primary);
+    margin-bottom: 12px;
+    display: block;
+}
+
+.expertise-main-title {
+    font-size: 42px;
+    font-weight: 400;
+    font-family: serif, system-ui;
+    margin: 0 0 20px 0;
+}
+
+.expertise-global-link {
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.2);
+    padding-bottom: 4px;
+}
+
 .expertise-carousel-viewport {
     width: 100%;
-    overflow: hidden; /* Locks swiping actions cleanly across mobile touch screens */
+    overflow: hidden; /* Clips elements sliding out of frame boundaries */
     position: relative;
     padding: 20px 0;
 }
@@ -118,35 +160,11 @@ body.dark .description p { color: #cbd5e1; }
     display: flex;
     width: max-content;
     animation: autoSlideScroll 38s linear infinite;
-    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1); /* Makes button slide animations perfectly smooth */
 }
-
-.carousel-mobile-nav-buttons {
-    display: none; /* Hidden on desktop screens */
-    gap: 10px;
-}
-
-.nav-ctrl-btn {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    background-color: #102a43;
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: bold;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.nav-ctrl-btn:active {
-    transform: scale(0.92);
-    background-color: #3b82f6;
-}
+ 
+ /* .expertise-carousel-viewport:hover .expertise-track {
+    animation-play-state: paused;
+} */
 
 .expertise-bleed-card {
     width: 25vw;
@@ -217,89 +235,9 @@ body.dark .description p { color: #cbd5e1; }
 
 @keyframes autoSlideScroll {
     0% { transform: translateX(0); }
-    100% { transform: translateX(calc(-25vw * 5)); }
+    100% { transform: translateX(calc(-25vw * 5)); } /* Tracks your exact catalog layout item boundaries */
 }
 
-/* ==========================================================================
-   RESPONSIVE DESIGN INTERFACE OVERRIDES FOR MOBILE SIZES
-   ========================================================================== */
-@media (max-width: 768px) {
-    /* 1. Stop auto web loop and toggle to React controlled transition matrices */
-    .expertise-track {
-        animation: none !important;
-        transform: var(--mobile-slide-offset, translateX(0)) !important;
-    }
-
-    .expertise-header-block {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-        margin-bottom: 24px;
-    }
-
-    /* 2. Reveal Navigation Buttons */
-    .carousel-mobile-nav-buttons {
-        display: flex !important;
-    }
-
-    /* 3. Scale Cards fluidly on screen display view widths */
-    .expertise-bleed-card {
-        width: 80vw !important;
-        min-width: 260px !important;
-        height: 44vh !important;
-        min-height: 340px !important;
-        margin-right: 4vw;
-        opacity: 1 !important;
-    }
-
-    .expertise-bleed-card:first-child {
-        margin-left: 4vw;
-    }
-
-    /* Keep interactive text visible cleanly without cursor-hover dependencies */
-    .bleed-card-inner {
-        transform: translateY(0) !important;
-    }
-
-    .bleed-card-action {
-        opacity: 1 !important;
-    }
-}
-
-/* ==========================================================================
-   MOBILE SMOOTH FLUID TOUCH VIEWPORT
-   ========================================================================== */
-@media (max-width: 768px) {
-    .expertise-track {
-        /* Kill standard CSS marquee animations on mobile entirely */
-        animation: none !important; 
-        transform: none !important;
-    }
-
-    .expertise-bleed-card {
-        /* Sized so users can easily see hints of incoming slides */
-        width: 80vw !important;
-        min-width: 270px !important;
-        height: 42vh !important;
-        min-height: 360px !important;
-        margin-right: 14px;
-        scroll-snap-align: center; /* Snaps cards to the horizontal center on swipe drop */
-        opacity: 1 !important; 
-    }
-
-    .expertise-bleed-card:first-child {
-        margin-left: 16px;
-    }
-
-    /* Force elements to render statically since hover rules don't exist on touch screens */
-    .bleed-card-inner {
-        transform: translateY(0) !important;
-    }
-
-    .bleed-card-action {
-        opacity: 1 !important;
-    }
-}
 /* ==========================================================================
    JOURNAL UPDATES ENGINE GRID
    ========================================================================== */
