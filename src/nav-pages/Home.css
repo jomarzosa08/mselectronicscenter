@@ -156,10 +156,10 @@ body.dark .expertise {
     padding: 20px 0;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
-    -webkit-overflow-scrolling: touch; /* Smooth inertia momentum on mobile viewports */
+    scroll-behavior: smooth; /* Required to make JavaScript autoScroll movements look sleek */
 }
 
-/* Hide scrollbars for Chrome, Safari, and Opera */
+/* Hide scrollbars completely across engines */
 .expertise-carousel-viewport::-webkit-scrollbar {
     display: none;
 }
@@ -169,10 +169,6 @@ body.dark .expertise {
     width: max-content;
     animation: autoSlideScroll 38s linear infinite;
 }
-
-/* .expertise-carousel-viewport:hover .expertise-track {
-    animation-play-state: paused;
-} */
 
 .expertise-bleed-card {
     width: 25vw;
@@ -185,7 +181,7 @@ body.dark .expertise {
     padding: 40px 24px;
     overflow: hidden;
     flex-shrink: 0;
-    scroll-snap-align: start; /* Standard desktop snapping root boundary */
+    scroll-snap-align: start;
 }
 
 .expertise-bleed-card::before {
@@ -248,34 +244,31 @@ body.dark .expertise {
 }
 
 /* ==========================================================================
-   MOBILE & TOUCH CONTROLS OVERHAUL LAYER
+   MOBILE SMOOTH FLUID TOUCH VIEWPORT
    ========================================================================== */
 @media (max-width: 768px) {
     .expertise-track {
-        /* KILL the infinite animation on mobile so it doesn't fight touch gestures */
+        /* Kill standard CSS marquee animations on mobile entirely */
         animation: none !important; 
         transform: none !important;
     }
 
     .expertise-bleed-card {
-        /* Scale width dynamically so mobile users can see hints of the next card */
-        width: 82vw !important;
-        min-width: 280px !important;
-        height: 45vh !important;
-        min-height: 380px !important;
-        margin-right: 16px;
-        scroll-snap-align: center; /* Snaps cards directly into the center for mobile view */
-        
-        /* Fade fallback for interactions without mouse hovers */
+        /* Sized so users can easily see hints of incoming slides */
+        width: 80vw !important;
+        min-width: 270px !important;
+        height: 42vh !important;
+        min-height: 360px !important;
+        margin-right: 14px;
+        scroll-snap-align: center; /* Snaps cards to the horizontal center on swipe drop */
         opacity: 1 !important; 
     }
 
-    /* Padding offset alignment for the first card on phone views */
     .expertise-bleed-card:first-child {
-        margin-left: 20px;
+        margin-left: 16px;
     }
 
-    /* Force details to stay visible since mobile doesn't have a true cursor :hover state */
+    /* Force elements to render statically since hover rules don't exist on touch screens */
     .bleed-card-inner {
         transform: translateY(0) !important;
     }

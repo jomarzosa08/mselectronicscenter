@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import '../index.css'
 import './Home.css'  
 
 function Home() {
   const [activeModalPost, setActiveModalPost] = useState(null)
+  const viewportRef = useRef(null)
+  const isInteractingRef = useRef(false)
 
   const services = [
     { id: 'srv1', title: 'Digital/Analog Trunking Repeater System', img: 'https://mselectronicscenter.com/wp-content/uploads/2024/04/img_7803.jpeg', link: '#' },
@@ -34,8 +36,10 @@ function Home() {
     }
   ]
 
+  // Double the array for infinite-feeling scrolling layouts
   const doubledServices = [...services, ...services]
 
+  // 1. Reveal Animations Observer
   useEffect(() => {
     const reveals = document.querySelectorAll('.reveal')
     const observerOptions = { root: null, threshold: 0.1 }
@@ -52,6 +56,69 @@ function Home() {
     return () => reveals.forEach((element) => revealObserver.unobserve(element))
   }, [])
 
+// 2. TRUE SEAMLESS INFINITE LOOP ENGINE (FOR DESKTOP & MOBILE SWIPING)
+useEffect(() => {
+  const viewport = viewportRef.current
+  if (!viewport) return
+
+  let autoScrollInterval
+
+  // Calculate the width of one complete set of cards
+  const getHalfScrollWidth = () => viewport.scrollWidth / 2
+
+  const startAutoScroll = () => {
+    autoScrollInterval = setInterval(() => {
+      if (!isInteractingRef.current) {
+        const halfWidth = getHalfScrollWidth()
+        
+        // If we are approaching or past the half-way mark (end of first array set)
+        if (viewport.scrollLeft >= halfWidth) {
+          // Instantly snap back to start silently, then scroll smoothly
+          viewport.scrollLeft = viewport.scrollLeft - halfWidth
+        }
+        
+        viewport.scrollBy({ left: 280, behavior: 'smooth' })
+      }
+    }, 3000) // Moves automatically every 3 seconds
+  }
+
+  // This handles manual finger swipes. If they swipe to the end or start, it snaps instantly.
+  const handleScrollReset = () => {
+    const halfWidth = getHalfScrollWidth()
+    
+    if (viewport.scrollLeft >= halfWidth) {
+      // User swiped into the second set: snap back to the first set invisibly
+      viewport.scrollLeft -= halfWidth
+    } else if (viewport.scrollLeft <= 0) {
+      // User swiped backward past the start: snap ahead to the twin card invisibly
+      viewport.scrollLeft += halfWidth
+    }
+  }
+
+  const handleInteractionStart = () => { isInteractingRef.current = true }
+  const handleInteractionEnd = () => { isInteractingRef.current = false }
+
+  startAutoScroll()
+
+  // Listeners for infinite scroll normalization
+  viewport.addEventListener('scroll', handleScrollReset, { passive: true })
+  
+  // Touch & Gesture controls
+  viewport.addEventListener('touchstart', handleInteractionStart, { passive: true })
+  viewport.addEventListener('touchend', handleInteractionEnd, { passive: true })
+  viewport.addEventListener('mouseenter', handleInteractionStart)
+  viewport.addEventListener('mouseleave', handleInteractionEnd)
+
+  return () => {
+    clearInterval(autoScrollInterval)
+    viewport.removeEventListener('scroll', handleScrollReset)
+    viewport.removeEventListener('touchstart', handleInteractionStart)
+    viewport.removeEventListener('touchend', handleInteractionEnd)
+    viewport.removeEventListener('mouseenter', handleInteractionStart)
+    viewport.removeEventListener('mouseleave', handleInteractionEnd)
+  }
+}, [])
+
   return (
     <>
       {/* HERO SECTION */}
@@ -62,7 +129,6 @@ function Home() {
           alt="Hero Background"
         />
         <div className="hero-content reveal slide-up">
-          {/* Aligned by forcing MS ELECTRONICS onto a clear, stacked line layout */}
           <h1>
             WELCOME TO <br />
             <span className="hero-brand-title">MS ELECTRONICS</span>
@@ -95,7 +161,8 @@ function Home() {
           <a href="#expertise-gallery" className="expertise-global-link">Explore Services</a>
         </div>
 
-        <div className="expertise-carousel-viewport" id="expertise-gallery">
+        {/* 💡 Linked Ref Node to run Javascript layout calculations flawlessly */}
+        <div className="expertise-carousel-viewport" id="expertise-gallery" ref={viewportRef}>
           <div className="expertise-track">
             {doubledServices.map((service, index) => (
               <div 
