@@ -151,9 +151,11 @@ body.dark .expertise {
 
 .expertise-carousel-viewport {
     width: 100%;
-    overflow: hidden; /* Clips elements sliding out of frame boundaries */
+    overflow-x: auto;
     position: relative;
     padding: 20px 0;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
 }
 
 .expertise-track {
