@@ -59,7 +59,7 @@ function Home() {
       {/* HERO SECTION */}
       <section className="hero">
         <img 
-          src="https://mselectronicscenter.com/wp-content/uploads/2024/04/cropped-img_4641.jpeg?w=1440&h=863" 
+          src="https://mselectronicscenter.com/wp-content/uploads/2024/04/img_4641.jpeg?w=NaN&h=" 
           className="hero-bg" 
           alt="Hero Background"
         />
@@ -67,7 +67,7 @@ function Home() {
           <h1>WELCOME TO MS ELECTRONICS</h1>
           <p>Your all-around electronics expert.</p>
           <div className="hero-actions">
-            <a href="contact.html" className="hero-cta-btn">
+            <a href="contact" className="hero-cta-btn">
               Contact Us Now <span className="cta-arrow">→</span>
             </a>
           </div>

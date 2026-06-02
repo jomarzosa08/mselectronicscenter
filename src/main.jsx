@@ -4,6 +4,8 @@ import Header from './Header.jsx';
 import Footer from './Footer.jsx';
 import Home from './nav-pages/Home.jsx';
 import About from './nav-pages/About.jsx';
+import Contact from './nav-pages/Contact.jsx';
+import Partnership from './nav-pages/Partnership.jsx';
 import './index.css';
 
 function MainApp() {
@@ -18,6 +20,8 @@ function MainApp() {
       <main>
         {currentPage === 'home' && <Home />}
         {currentPage === 'about' && <About />}
+        {currentPage === 'contact' && <Contact />}
+        {currentPage === 'partnership' && <Partnership />}
       </main>
 
       <Footer />

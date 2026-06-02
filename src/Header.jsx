@@ -53,9 +53,24 @@ function Header({ currentPage, setCurrentPage }) {
         >
           About Us
         </a>
-        <a href="#" onClick={() => setIsNavOpen(false)}>Contact Us</a>
-        <a href="#" onClick={() => setIsNavOpen(false)}>Products</a>
-        <a href="#" onClick={() => setIsNavOpen(false)}>Partnership</a>
+        <a 
+          href="#" 
+          className={currentPage === 'contact' ? 'active-nav' : ''} 
+          onClick={(e) => handlePageSwitch(e, 'contact')}
+        >
+          Contact Us
+        </a>
+
+        {/* <a href="#" onClick={() => setIsNavOpen(false)}>Products</a> */}
+
+        <a
+          href="#"
+          className={currentPage === 'partnership' ? 'active-nav' : ''}
+          onClick={(e) => handlePageSwitch(e, 'partnership')}
+        >
+          Partnerships
+        </a>
+        
       </nav>
 
       <div className="nav-actions">

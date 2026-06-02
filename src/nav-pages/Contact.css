@@ -1,0 +1,371 @@
+/* ==========================================================================
+   CONTACT COMPONENT SPECIFIC LAYOUT MATRIX (CONTACT.CSS)
+   ========================================================================== */
+
+/* ==========================================================================
+   CONTACT HERO & OVERALL SECTION LAYOUT
+   ========================================================================== */
+.contact-hero {
+    background: linear-gradient(135deg, #102a43 0%, #0b1d33 100%);
+    padding: 6rem 2rem 4rem 2rem;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+}
+
+.contact-hero .hero-content {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.contact-hero h1 {
+    font-size: 46px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    margin-bottom: 12px;
+    line-height: 1.2;
+}
+
+.contact-hero p {
+    font-size: 16px;
+    color: #94a3b8;
+    max-width: 700px;
+}
+
+.contact-section {
+    padding: 80px 0;
+    background-color: #f8fafc;
+    transition: background-color 0.3s ease;
+}
+
+/* Unified Theme Toggle Class mapping */
+body.dark .contact-section {
+    background-color: #070a13;
+}
+
+.contact-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 4%;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 50px;
+    margin-bottom: 80px;
+    align-items: start;
+}
+
+/* ==========================================================================
+   LEFT COLUMN: CONTACT INFORMATION BLOCK
+   ========================================================================== */
+.contact-info-block {
+    background-color: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    padding: 40px;
+    border-radius: 4px;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.02);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+body.dark .contact-info-block {
+    background-color: #0f172a;
+    border-color: rgba(255, 255, 255, 0.06);
+}
+
+.contact-info-block h2 {
+    font-size: 36px;
+    font-family: serif, system-ui;
+    margin-bottom: 24px;
+    font-weight: 500;
+    color: #0f172a;
+}
+
+body.dark .contact-info-block h2 {
+    color: #ffffff;
+}
+
+.manager-title {
+    font-size: 15px;
+    line-height: 1.65;
+    color: #475569;
+    margin-bottom: 20px;
+}
+
+body.dark .manager-title {
+    color: #cbd5e1;
+}
+
+.role-badge {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background-color: #f1f5f9;
+    color: var(--color-primary);
+    padding: 4px 12px;
+    border-radius: 2px;
+    margin-top: 8px;
+}
+
+body.dark .role-badge {
+    background-color: #1e293b;
+}
+
+.info-links-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 12px 16px;
+    background: #f1f5f9;
+    border-left: 3px solid var(--color-primary);
+}
+
+body.dark .info-item {
+    background: #1e293b;
+}
+
+.info-icon {
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+}
+
+.info-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #64748b;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+}
+
+body.dark .info-label {
+    color: #94a3b8;
+}
+
+.info-item a {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.address-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #334155;
+}
+
+body.dark .address-text {
+    color: #cbd5e1;
+}
+
+/* ==========================================================================
+   RIGHT COLUMN: PROFESSIONAL CONSULTATION CARD
+   ========================================================================== */
+.consultation-card {
+    background-color: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    padding: 40px;
+    border-radius: 4px;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.02);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+body.dark .consultation-card {
+    background-color: #0f172a;
+    border-color: rgba(255, 255, 255, 0.06);
+}
+
+.consultation-header h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #0f172a;
+}
+
+body.dark .consultation-card h3 {
+    color: #ffffff;
+}
+
+.consultation-header p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #64748b;
+    margin-bottom: 24px;
+}
+
+body.dark .consultation-header p {
+    color: #94a3b8;
+}
+
+.hours-box {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.hours-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 14px;
+    color: #475569;
+}
+
+body.dark .hours-row {
+    border-bottom-color: #334155;
+    color: #cbd5e1;
+}
+
+.hours-row .time {
+    font-weight: 600;
+}
+
+.hours-row.closed .time {
+    color: #ef4444;
+}
+
+.fb-connect-box p {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 16px;
+}
+
+body.dark .fb-connect-box p {
+    color: #94a3b8;
+}
+
+.fb-consult-btn {
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+    padding: 12px 24px;
+    background-color: #1877f2;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: background-color 0.2s ease;
+}
+
+.fb-consult-btn:hover {
+    background-color: #145dbf;
+}
+
+/* ==========================================================================
+   BOTTOM ROW: GOOGLE MAPS WRAPPER CONTAINER
+   ========================================================================== */
+.map-wrapper {
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 4px;
+    margin-bottom: 80px;
+    overflow: hidden;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+body.dark .map-wrapper {
+    background: #0f172a;
+    border-color: rgba(255, 255, 255, 0.06);
+}
+
+.map-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 40px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+body.dark .map-header {
+    border-bottom-color: #334155;
+}
+
+.map-header h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+body.dark .map-header h3 {
+    color: #ffffff;
+}
+
+.map-header p {
+    font-size: 14px;
+    color: #64748b;
+}
+
+body.dark .map-header p {
+    color: #94a3b8;
+}
+
+.directions-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+}
+
+.directions-btn:hover {
+    background-color: var(--color-primary);
+    color: #ffffff;
+}
+
+.map-iframe-container {
+    position: relative;
+    width: 100%;
+    line-height: 0;
+}
+
+body.dark .map-iframe-container iframe {
+    filter: grayscale(30%) invert(90%) hue-rotate(180deg);
+    opacity: 0.85;
+}
+
+/* Responsive matrices */
+@media (max-width: 1024px) {
+    .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+}
+@media (max-width: 768px) {
+    .contact-info-block h2, .map-header h3 {
+        font-size: 28px;
+    }
+    .map-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 24px;
+    }
+}

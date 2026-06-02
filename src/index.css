@@ -228,3 +228,5 @@ body.dark .footer {
     body.dark .nav-links { background-color: #070a13; }
     .nav-links.open { transform: translateX(0); }
 }
+
+/* Add top padding to all hero sections to push them completely clear of the fixed navbar */
