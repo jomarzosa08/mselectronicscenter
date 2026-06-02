@@ -149,50 +149,34 @@ body.dark .expertise {
     padding-bottom: 4px;
 }
 
-/* 1. The Viewport Wrapper */
 .expertise-carousel-viewport {
     width: 100%;
-    overflow-x: auto; /* Enables horizontal scrolling/swiping */
-    scroll-behavior: smooth;
-    
-    /* Enables content snapping on mobile swiping */
-    scroll-snap-type: x mandatory; 
-    
-    /* Hides default scrollbars while keeping swipe mechanics active */
-    scrollbar-width: none; /* Firefox */
+    overflow: hidden; /* Clips elements sliding out of frame boundaries */
+    position: relative;
+    padding: 20px 0;
 }
 
-.expertise-carousel-viewport::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, and Opera */
-}
-
-/* 2. The Flex Track Grid */
 .expertise-track {
     display: flex;
-    flex-wrap: nowrap; /* Prevents cards from dropping to the next line */
-    width: max-content; /* Keeps the container wide enough for all items */
+    width: max-content;
+    animation: autoSlideScroll 38s linear infinite;
 }
+ 
+ /* .expertise-carousel-viewport:hover .expertise-track {
+    animation-play-state: paused;
+} */
 
-/* 3. The Individual Bleed Cards */
 .expertise-bleed-card {
-    /* Desktop settings (Default) */
+    width: 25vw;
+    min-width: 320px;
+    height: 52vh;
+    min-height: 440px;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    padding: 40px 24px;
+    overflow: hidden;
     flex-shrink: 0;
-    scroll-snap-align: start; /* Tells the viewport where to snap the card */
-}
-
-
-/* 4. Mobile Responsive Adjustments */
-@media (max-width: 768px) {
-    .expertise-bleed-card {
-        /* Forces each card to occupy a fixed portion of the mobile screen view */
-        width: 85vw !important; 
-        margin-right: 16px; /* Spacing between cards during swipe */
-    }
-    
-    /* Optional: Indent the very first card to align nicely with your padding padding */
-    .expertise-bleed-card:first-child {
-        margin-left: 20px; 
-    }
 }
 
 .expertise-bleed-card::before {
