@@ -2,15 +2,16 @@ import { useState, useEffect } from 'react'
 import '../index.css'
 import './Home.css'  
 
-function Home() {
+function Home({ setCurrentPage }) {
   const [activeModalPost, setActiveModalPost] = useState(null)
 
+  // Map each service to its respective page target state identifier
   const services = [
-    { id: 'srv1', title: 'Digital/Analog Trunking Repeater System', img: 'https://mselectronicscenter.com/wp-content/uploads/2024/04/img_7803.jpeg', link: '#' },
-    { id: 'srv2', title: 'Solar Panel Systems & Street Lights', img: 'https://mselectronicscenter.com/wp-content/uploads/2024/04/img_5723.jpeg?w=NaN&h=', link: '#' },
-    { id: 'srv3', title: 'CCTV Camera Installation', img: 'https://mselectronicscenter.com/wp-content/uploads/2024/04/img_0560.jpeg?w=NaN&h=', link: 'expertise-cctv.html' },
-    { id: 'srv4', title: 'Wireless Radio Installation', img: 'https://mselectronicscenter.com/wp-content/uploads/2024/04/img_8371.jpeg?w=NaN&h=', link: 'expertise-radio.html' },
-    { id: 'srv5', title: 'Field Equipments & Products', img: 'https://mselectronicscenter.com/wp-content/uploads/2024/04/img_7562.jpeg?w=NaN&h=', link: '#' }
+    { id: 'srv1', title: 'Digital/Analog Trunking Repeater System', img: 'https://mselectronicscenter.com/wp-content/uploads/2024/04/img_7803.jpeg', pageId: 'repeater' },
+    { id: 'srv2', title: 'Solar Panel Systems & Street Lights', img: 'https://mselectronicscenter.com/wp-content/uploads/2024/04/img_5723.jpeg?w=NaN&h=', pageId: 'home' },
+    { id: 'srv3', title: 'CCTV Camera Installation', img: 'https://mselectronicscenter.com/wp-content/uploads/2024/04/img_0560.jpeg?w=NaN&h=', pageId: 'home' },
+    { id: 'srv4', title: 'Wireless Radio Installation', img: 'https://mselectronicscenter.com/wp-content/uploads/2024/04/img_8371.jpeg?w=NaN&h=', pageId: 'home' },
+    { id: 'srv5', title: 'Field Equipments & Products', img: 'https://mselectronicscenter.com/wp-content/uploads/2024/04/img_7562.jpeg?w=NaN&h=', pageId: 'home' }
   ]
 
   const journalPosts = [
@@ -54,8 +55,6 @@ function Home() {
 
   return (
     <>
-      {/* REMOVED DUPLICATE <Header /> - Handled seamlessly by main.jsx */}
-
       {/* HERO SECTION */}
       <section className="hero">
         <img 
@@ -64,16 +63,22 @@ function Home() {
           alt="Hero Background"
         />
         <div className="hero-content reveal slide-up">
-          {/* Aligned by forcing MS ELECTRONICS onto a clear, stacked line layout */}
           <h1>
             WELCOME TO <br />
             <span className="hero-brand-title">MS ELECTRONICS</span>
           </h1>
           <p>Your all-around electronics expert.</p>
           <div className="hero-actions">
-            <a href="contact" className="hero-cta-btn">
+            <button 
+              onClick={() => {
+                setCurrentPage('contact');
+                window.scrollTo({ top: 0, behavior: 'instant' });
+              }} 
+              className="hero-cta-btn"
+              style={{ border: 'none', cursor: 'pointer' }}
+            >
               Contact Us Now <span className="cta-arrow">→</span>
-            </a>
+            </button>
           </div>
         </div>
       </section>
@@ -100,14 +105,26 @@ function Home() {
         <div className="expertise-carousel-viewport" id="expertise-gallery">
           <div className="expertise-track">
             {doubledServices.map((service, index) => (
+              /* 1. Moved onClick here to make the entire background image card clickable */
               <div 
                 key={`${service.id}-${index}`}
                 className="expertise-bleed-card" 
-                style={{ '--bg-image': `url('${service.img}')` }}
+                onClick={() => {
+                  if (service.pageId !== 'home') {
+                    setCurrentPage(service.pageId);
+                  }
+                }}
+                style={{ 
+                  '--bg-image': `url('${service.img}')`,
+                  cursor: 'pointer' // Changes mouse cursor to indicator across the whole image surface
+                }}
               >
                 <div className="bleed-card-inner">
                   <h3>{service.title}</h3>
-                  <a href={service.link} className="bleed-card-action">Read More <span>→</span></a>
+                  {/* 2. Turned this back into a clean visual span tracker since the wrapper handles the click event now */}
+                  <span className="bleed-card-action">
+                    Read More <span>→</span>
+                  </span>
                 </div>
               </div>
             ))}
@@ -171,8 +188,6 @@ function Home() {
           </div>
         </div>
       )}
-
-      {/* REMOVED DUPLICATE <Footer /> - Handled seamlessly by main.jsx */}
     </>
   )
 }
