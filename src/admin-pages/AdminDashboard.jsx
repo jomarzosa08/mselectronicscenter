@@ -118,7 +118,6 @@ function AdminDashboard({ setCurrentPage }) {
     
     for (const file of files) {
       try {
-        // Automatically compress and acquire compressed Base64 Data URL payload
         const crunchedBase64 = await compressImageFile(file);
         setImagePool((prev) => [...prev, crunchedBase64]);
       } catch (err) {
@@ -128,14 +127,12 @@ function AdminDashboard({ setCurrentPage }) {
     e.target.value = null; // Flush input node target
   };
 
-  // Add individual link paths to stack
   const appendImageLinkToPool = () => {
     if (!singleLinkInput.trim()) return;
     setImagePool((prev) => [...prev, singleLinkInput.trim()]);
     setSingleLinkInput("");
   };
 
-  // Purge a targeted image item out of the preview queue matrix
   const removeImageFromPool = (indexToRemove) => {
     setImagePool((prev) => prev.filter((_, idx) => idx !== indexToRemove));
   };
@@ -152,13 +149,11 @@ function AdminDashboard({ setCurrentPage }) {
       const updatesRef = ref(database, "updates");
       const newPostRef = push(updatesRef);
 
-      // Automated Read Time Computation Engine
       const wordsPerMinute = 200; 
       const wordCount = postContent.trim().split(/\s+/).length;
       const computedMinutes = Math.max(1, Math.ceil(wordCount / wordsPerMinute));
       const finalReadTimeStr = `${computedMinutes} min read`;
 
-      // Format custom calendar picker value to output styling: "Month Day, Year"
       const dateParts = postDate.split("-");
       const cleanFormattedDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2])
         .toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
@@ -166,14 +161,13 @@ function AdminDashboard({ setCurrentPage }) {
       await set(newPostRef, {
         title: postTitle,
         content: postContent,
-        category: postCategory.toUpperCase(), // Automatically uppercase tag data for clean consistency
+        category: postCategory.toUpperCase(),
         readTime: finalReadTimeStr, 
         images: imagePool.length > 0 ? imagePool : ["https://images.unsplash.com/photo-1518770660439-4636190af475?w=800"], 
         date: cleanFormattedDate,
         timestamp: Date.now()
       });
 
-      // Clear layout forms
       setPostTitle("");
       setPostContent("");
       setImagePool([]);
@@ -256,194 +250,208 @@ function AdminDashboard({ setCurrentPage }) {
         </header>
 
         <div className="workspace-scroll-grid">
-          {activeTab === "overview" && (
-            <div className="overview-pane">
-              <div className="metrics-grid">
-                <div className="metric-card">
-                  <h4>Published Articles</h4>
-                  <p className="metric-value">{updates.length}</p>
+          <div className="workspace-content-body">
+            {activeTab === "overview" && (
+              <div className="overview-pane">
+                <div className="metrics-grid">
+                  <div className="metric-card">
+                    <h4>Published Articles</h4>
+                    <p className="metric-value">{updates.length}</p>
+                  </div>
+                  <div className="metric-card">
+                    <h4>Pending Inquiries</h4>
+                    <p className="metric-value">{inquiries.length}</p>
+                  </div>
+                  <div className="metric-card">
+                    <h4>Database Sync Status</h4>
+                    <p className="metric-value static-success">ONLINE</p>
+                  </div>
                 </div>
-                <div className="metric-card">
-                  <h4>Pending Inquiries</h4>
-                  <p className="metric-value">{inquiries.length}</p>
-                </div>
-                <div className="metric-card">
-                  <h4>Database Sync Status</h4>
-                  <p className="metric-value static-success">ONLINE</p>
+                <div className="system-notice-box">
+                  <h3>Journal Dispatch Console Active</h3>
+                  <p>Post system revisions, field engineering reports, or telecom updates. Articles match the dynamic card layout formatting on the public front-end.</p>
                 </div>
               </div>
-              <div className="system-notice-box">
-                <h3>Journal Dispatch Console Active</h3>
-                <p>Post system revisions, field engineering reports, or telecom updates. Articles match the dynamic card layout formatting on the public front-end.</p>
-              </div>
-            </div>
-          )}
+            )}
 
-          {activeTab === "publish" && (
-            <div className="publish-pane">
-              <h3>Publish Live Field Report / Update</h3>
-              
-              <form onSubmit={handleCreatePost} className="admin-creation-form">
-                <div className="form-group-row">
-                  <div className="form-input-block">
-                    <label>Article Heading / Title</label>
-                    <input 
-                      type="text" 
-                      placeholder="e.g., Barangay Wireless Radio Network Deployment Across Cebu Mountain Districts..."
-                      value={postTitle}
-                      onChange={(e) => setPostTitle(e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                <div className="form-group-row">
-                  <div className="form-input-block">
-                    <label>Tag Category Selection</label>
-                    <select value={postCategory} onChange={(e) => setPostCategory(e.target.value)}>
-                      <option value="Communication">Communication</option>
-                      <option value="Surveillance">Surveillance</option>
-                      <option value="Signal Boosting">Signal Boosting</option>
-                      <option value="Renewable Energy">Renewable Energy</option>
-                      <option value="Hardware">Hardware</option>
-                      <option value="Partnerships">Partnerships</option>
-                    </select>
-                  </div>
-                  <div className="form-input-block">
-                    <label>Publication Target Date</label>
-                    <input 
-                      type="date" 
-                      value={postDate}
-                      onChange={(e) => setPostDate(e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                {/* ADVANCED MULTIPLE IMAGE INTERACTION MODULE WITH COMPRESSION INDICATOR */}
-                <div className="form-input-block image-interaction-box">
-                  <label>Display Card Image Cover Repository ({imagePool.length} Loaded)</label>
-                  <div className="image-toggle-selector">
-                    <button 
-                      type="button"
-                      className={`toggle-sub-btn ${imageSourceType === 'link' ? 'active-toggle' : ''}`}
-                      onClick={() => setImageSourceType('link')}
-                    >
-                      🔗 Add Images Via URL Link
-                    </button>
-                    <button 
-                      type="button"
-                      className={`toggle-sub-btn ${imageSourceType === 'file' ? 'active-toggle' : ''}`}
-                      onClick={() => setImageSourceType('file')}
-                    >
-                      📁 Batch Upload File Attachments
-                    </button>
-                  </div>
-
-                  {imageSourceType === 'link' ? (
-                    <div className="link-append-row" style={{display: 'flex', gap: '8px'}}>
+            {activeTab === "publish" && (
+              <div className="publish-pane">
+                <h3>Publish Live Field Report / Update</h3>
+                
+                <form onSubmit={handleCreatePost} className="admin-creation-form">
+                  <div className="form-group-row">
+                    <div className="form-input-block">
+                      <label>Article Heading / Title</label>
                       <input 
                         type="text" 
-                        placeholder="Paste web address image destination..."
-                        value={singleLinkInput}
-                        onChange={(e) => setSingleLinkInput(e.target.value)}
-                        style={{flexGrow: 1}}
+                        placeholder="e.g., Barangay Wireless Radio Network Deployment..."
+                        value={postTitle}
+                        onChange={(e) => setPostTitle(e.target.value)}
                       />
-                      <button type="button" onClick={appendImageLinkToPool} className="form-submit-btn" style={{padding: '10px 16px', flexShrink: 0}}>
-                        ＋ Add Link
+                    </div>
+                  </div>
+
+                  <div className="form-group-row">
+                    <div className="form-input-block">
+                      <label>Tag Category Selection</label>
+                      <select value={postCategory} onChange={(e) => setPostCategory(e.target.value)}>
+                        <option value="Communication">Communication</option>
+                        <option value="Surveillance">Surveillance</option>
+                        <option value="Signal Boosting">Signal Boosting</option>
+                        <option value="Renewable Energy">Renewable Energy</option>
+                        <option value="Hardware">Hardware</option>
+                        <option value="Partnerships">Partnerships</option>
+                      </select>
+                    </div>
+                    <div className="form-input-block">
+                      <label>Publication Target Date</label>
+                      <input 
+                        type="date" 
+                        value={postDate}
+                        onChange={(e) => setPostDate(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  {/* ADVANCED MULTIPLE IMAGE INTERACTION MODULE WITH COMPRESSION INDICATOR */}
+                  <div className="form-input-block image-interaction-box">
+                    <label>Display Card Image Cover Repository ({imagePool.length} Loaded)</label>
+                    <div className="image-toggle-selector">
+                      <button 
+                        type="button"
+                        className={`toggle-sub-btn ${imageSourceType === 'link' ? 'active-toggle' : ''}`}
+                        onClick={() => setImageSourceType('link')}
+                      >
+                        🔗 Add Images Via URL Link
+                      </button>
+                      <button 
+                        type="button"
+                        className={`toggle-sub-btn ${imageSourceType === 'file' ? 'active-toggle' : ''}`}
+                        onClick={() => setImageSourceType('file')}
+                      >
+                        📁 Batch Upload File Attachments
                       </button>
                     </div>
-                  ) : (
-                    <div className="custom-file-upload-wrapper">
-                      <label className="file-dropzone-mask">
+
+                    {imageSourceType === 'link' ? (
+                      <div className="link-append-responsive-row">
                         <input 
-                          type="file" 
-                          accept="image/*"
-                          multiple
-                          onChange={handleMultipleImageUpload}
-                          style={{ display: 'none' }}
+                          type="text" 
+                          placeholder="Paste web address image destination..."
+                          value={singleLinkInput}
+                          onChange={(e) => setSingleLinkInput(e.target.value)}
+                          className="link-url-input"
                         />
-                        <span>Click here to select files — Auto-compressed to JPEGs safely!</span>
-                      </label>
-                    </div>
-                  )}
+                        <button type="button" onClick={appendImageLinkToPool} className="append-pool-btn">
+                          ＋ Add Link
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="custom-file-upload-wrapper">
+                        <label className="file-dropzone-mask">
+                          <input 
+                            type="file" 
+                            accept="image/*"
+                            multiple
+                            onChange={handleMultipleImageUpload}
+                            style={{ display: 'none' }}
+                          />
+                          <span>Click here to select files — Auto-compressed to JPEGs safely!</span>
+                        </label>
+                      </div>
+                    )}
 
-                  {/* Dynamic Thumbnails Preview */}
-                  {imagePool.length > 0 && (
-                    <div className="multitask-image-preview-wrapper">
-                      <p className="preview-lbl">Active Media Array Queue (First item serves as primary cover):</p>
-                      <div className="preview-thumbnails-grid">
-                        {imagePool.map((imgSrc, index) => (
-                          <div key={index} className="thumbnail-card-wrapper">
-                            <img src={imgSrc} alt="Queued compressed chunk metadata" />
-                            <button type="button" className="clear-thumb-idx-btn" onClick={() => removeImageFromPool(index)}>
-                              ✕
-                            </button>
-                          </div>
-                        ))}
+                    {/* Dynamic Thumbnails Preview */}
+                    {imagePool.length > 0 && (
+                      <div className="multitask-image-preview-wrapper">
+                        <p className="preview-lbl">Active Media Array Queue (First item serves as primary cover):</p>
+                        <div className="preview-thumbnails-grid">
+                          {imagePool.map((imgSrc, index) => (
+                            <div key={index} className="thumbnail-card-wrapper">
+                              <img src={imgSrc} alt="Queued compressed chunk metadata" />
+                              <button type="button" className="clear-thumb-idx-btn" onClick={() => removeImageFromPool(index)}>
+                                ✕
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="form-input-block">
+                    <label>Article Context / Content Paragraph Body</label>
+                    <textarea 
+                      rows="6" 
+                      placeholder="Write detailed summaries here. Read time computes automatically..."
+                      value={postContent}
+                      onChange={(e) => setPostContent(e.target.value)}
+                    ></textarea>
+                  </div>
+
+                  <button type="submit" disabled={isPublishing} className="form-submit-btn">
+                    {isPublishing ? "Syncing Firebase Nodes..." : "🚀 Broadcast to Public Journal"}
+                  </button>
+                </form>
+
+                <hr className="section-divider" />
+
+                <h3>Currently Active Journal Stream ({updates.length})</h3>
+                <div className="inquiries-stack">
+                  {updates.map((post) => (
+                    <div key={post.id} className="inquiry-data-card">
+                      <div className="card-meta-row">
+                        <span className="update-badge-label" style={{background: '#3b82f6', color: '#fff'}}>{post.category}</span>
+                        <button onClick={() => handleDeletePost(post.id)} className="delete-record-btn">Purge Entry ×</button>
+                      </div>
+                      <div style={{display: 'flex', gap: '16px', alignItems: 'center', marginTop: '10px'}}>
+                        {post.images && post.images.length > 0 && (
+                          <img src={post.images[0]} alt="" style={{width: '60px', height: '40px', objectFit: 'cover', borderRadius: '4px'}} />
+                        )}
+                        <div>
+                          <h4 style={{color: '#fff', fontSize: '15px', margin: '0 0 4px 0'}}>{post.title}</h4>
+                          <p style={{fontSize: '12px', color: '#94a3b8', margin: 0}}>{post.date} • {post.readTime} ({post.images ? post.images.length : 1} photos)</p>
+                        </div>
                       </div>
                     </div>
-                  )}
+                  ))}
                 </div>
+              </div>
+            )}
 
-                <div className="form-input-block">
-                  <label>Article Context / Content Paragraph Body</label>
-                  <textarea 
-                    rows="6" 
-                    placeholder="Write detailed summaries here. Read time computes automatically based on word density counts..."
-                    value={postContent}
-                    onChange={(e) => setPostContent(e.target.value)}
-                  ></textarea>
-                </div>
-
-                <button type="submit" disabled={isPublishing} className="form-submit-btn">
-                  {isPublishing ? "Syncing Firebase Nodes..." : "🚀 Broadcast to Public Journal"}
-                </button>
-              </form>
-
-              <hr className="section-divider" />
-
-              <h3>Currently Active Journal Stream ({updates.length})</h3>
-              <div className="inquiries-stack">
-                {updates.map((post) => (
-                  <div key={post.id} className="inquiry-data-card">
-                    <div className="card-meta-row">
-                      <span className="update-badge-label" style={{background: '#3b82f6', color: '#fff'}}>{post.category}</span>
-                      <button onClick={() => handleDeletePost(post.id)} className="delete-record-btn">Purge Entry ×</button>
-                    </div>
-                    <div style={{display: 'flex', gap: '16px', alignItems: 'center', marginTop: '10px'}}>
-                      {post.images && post.images.length > 0 && (
-                        <img src={post.images[0]} alt="" style={{width: '60px', height: '40px', objectFit: 'cover', borderRadius: '4px'}} />
-                      )}
-                      <div>
-                        <h4 style={{color: '#fff', fontSize: '15px', margin: '0 0 4px 0'}}>{post.title}</h4>
-                        <p style={{fontSize: '12px', color: '#94a3b8', margin: 0}}>{post.date} • {post.readTime} ({post.images ? post.images.length : 1} photos)</p>
+            {activeTab === "inquiries" && (
+              <div className="inquiries-pane">
+                <h3>Client Inquiries Node</h3>
+                <div className="inquiries-stack">
+                  {inquiries.map((item) => (
+                    <div key={item.id} className="inquiry-data-card">
+                      <div className="card-meta-row">
+                        <span className="client-name">👤 {item.name || "Guest User"}</span>
+                        <button className="delete-record-btn" onClick={() => handleDeleteInquiry(item.id)}>Dismiss ×</button>
                       </div>
+                      <div className="card-contact-details">
+                        <p><strong>Email:</strong> {item.email}</p>
+                        <p><strong>Subject:</strong> {item.subject}</p>
+                      </div>
+                      <div className="card-message-body"><p>{item.message}</p></div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
-          {activeTab === "inquiries" && (
-            <div className="inquiries-pane">
-              <h3>Client Inquiries Node</h3>
-              <div className="inquiries-stack">
-                {inquiries.map((item) => (
-                  <div key={item.id} className="inquiry-data-card">
-                    <div className="card-meta-row">
-                      <span className="client-name">👤 {item.name || "Guest User"}</span>
-                      <button className="delete-record-btn" onClick={() => handleDeleteInquiry(item.id)}>Dismiss ×</button>
-                    </div>
-                    <div className="card-contact-details">
-                      <p><strong>Email:</strong> {item.email}</p>
-                      <p><strong>Subject:</strong> {item.subject}</p>
-                    </div>
-                    <div className="card-message-body"><p>{item.message}</p></div>
-                  </div>
-                ))}
-              </div>
+          {/* ADMIN CONSOLE SYSTEM FOOTER */}
+          <footer className="admin-dashboard-footer">
+            <div className="footer-left">
+              <span>© {new Date().getFullYear()} MS Electronics Center. All rights reserved.</span>
             </div>
-          )}
+            <div className="footer-right">
+              <span className="version-tag">System Version 2.1.0</span>
+              <span className="footer-separator">•</span>
+              <span className="status-label-glow">Database Secure</span>
+            </div>
+          </footer>
         </div>
       </main>
     </div>

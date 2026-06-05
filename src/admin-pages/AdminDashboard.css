@@ -591,3 +591,104 @@
 .form-input-block input[type="date"] {
     color-scheme: dark;
 }
+
+/* --- RESPONSIVE IMAGE LINK INPUT ENGINE --- */
+.link-append-responsive-row {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  align-items: center;
+}
+
+.link-url-input {
+  flex-grow: 1;
+  margin-bottom: 0 !important; /* Overrides default spacing layouts */
+}
+
+.append-pool-btn {
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 20px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s ease;
+}
+
+.append-pool-btn:hover {
+  background-color: #1d4ed8;
+}
+
+/* --- ADMIN PANEL SYSTEM FOOTER BLOCK --- */
+.workspace-scroll-grid {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 70px); /* Adjusts relative to workspace header heights */
+}
+
+.workspace-content-body {
+  flex-grow: 1;
+  padding-bottom: 40px;
+}
+
+.admin-dashboard-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  margin-top: auto;
+  border-top: 1px solid #1e293b;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.admin-dashboard-footer .footer-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-dashboard-footer .footer-separator {
+  color: #334155;
+}
+
+.admin-dashboard-footer .status-label-glow {
+  color: #10b981;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.admin-dashboard-footer .status-label-glow::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background-color: #10b981;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #10b981;
+}
+
+/* --- MOBILE RESPONSIVE MEDIA BREAKPOINTS --- */
+@media (max-width: 768px) {
+  .link-append-responsive-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .append-pool-btn {
+    width: 100%;
+    padding: 14px;
+    text-align: center;
+  }
+
+  .admin-dashboard-footer {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+    padding: 20px 10px;
+  }
+}
