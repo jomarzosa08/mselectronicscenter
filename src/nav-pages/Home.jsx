@@ -8,10 +8,12 @@ function Home({ setCurrentPage }) {
   // Map each service to its respective page target state identifier
   const services = [
     { id: 'srv1', title: 'Digital/Analog Trunking Repeater System', img: 'https://mselectronicscenter.com/wp-content/uploads/2024/04/img_7803.jpeg', pageId: 'repeater' },
-    { id: 'srv2', title: 'Solar Panel Systems & Street Lights', img: 'https://mselectronicscenter.com/wp-content/uploads/2024/04/img_5723.jpeg?w=NaN&h=', pageId: 'home' },
-    { id: 'srv3', title: 'CCTV Camera Installation', img: 'https://mselectronicscenter.com/wp-content/uploads/2024/04/img_0560.jpeg?w=NaN&h=', pageId: 'home' },
-    { id: 'srv4', title: 'Wireless Radio Installation', img: 'https://mselectronicscenter.com/wp-content/uploads/2024/04/img_8371.jpeg?w=NaN&h=', pageId: 'home' },
-    { id: 'srv5', title: 'Field Equipments & Products', img: 'https://mselectronicscenter.com/wp-content/uploads/2024/04/img_7562.jpeg?w=NaN&h=', pageId: 'home' }
+    { id: 'srv2', title: 'Solar Panel Systems', img: 'https://mselectronicscenter.com/wp-content/uploads/2024/04/img_5723.jpeg?w=NaN&h=', pageId: 'home' },
+    { id: 'srv3', title: 'Street Light Systems', img: 'https://mselectronicscenter.com/wp-content/uploads/2024/04/img_6656-2.jpeg?w=2250&h=', pageId: 'home' },
+    { id: 'srv4', title: 'CCTV Camera Installation', img: 'https://mselectronicscenter.com/wp-content/uploads/2024/04/img_0560.jpeg?w=NaN&h=', pageId: 'home' },
+    { id: 'srv5', title: 'Wireless Radio Installation', img: 'https://mselectronicscenter.com/wp-content/uploads/2024/04/img_8371.jpeg?w=NaN&h=', pageId: 'home' },
+    { id: 'srv6', title: 'Field Equipments & Products', img: 'https://mselectronicscenter.com/wp-content/uploads/2024/04/img_7562.jpeg?w=NaN&h=', pageId: 'home' }
+    
   ]
 
   const journalPosts = [
