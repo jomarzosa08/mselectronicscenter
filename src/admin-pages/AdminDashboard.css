@@ -7,6 +7,53 @@
     color: #e2e8f0;
     font-family: system-ui, -apple-system, sans-serif;
     overflow: hidden;
+    position: relative;
+}
+
+/* MOBILE TOP NAVIGATION EMBED (Hidden on large screens) */
+.mobile-top-bar {
+    display: none;
+    height: 60px;
+    width: 100%;
+    background-color: #0f172a;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+}
+
+.mobile-hamburger-btn {
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 24px;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mobile-bar-title {
+    text-align: center;
+}
+
+.mobile-bar-title h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.mobile-status-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #10b981;
+    border-radius: 50%;
 }
 
 /* SIDE NAVIGATION RAIL */
@@ -17,6 +64,9 @@
     display: flex;
     flex-direction: column;
     padding: 24px;
+    flex-shrink: 0;
+    z-index: 150;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sidebar-branding {
@@ -28,15 +78,8 @@
     margin-bottom: 24px;
 }
 
-.brand-shield {
-    font-size: 28px;
-}
-
-.sidebar-branding h3 {
-    margin: 0;
-    font-size: 16px;
-    font-weight: 600;
-}
+.brand-shield { font-size: 28px; }
+.sidebar-branding h3 { margin: 0; font-size: 16px; font-weight: 600; }
 
 .system-tag {
     font-size: 11px;
@@ -106,10 +149,7 @@
     padding: 0 40px;
 }
 
-.workspace-header h2 {
-    font-size: 18px;
-    margin: 0;
-}
+.workspace-header h2 { font-size: 18px; margin: 0; }
 
 .user-badge-profile {
     display: flex;
@@ -134,7 +174,7 @@
     overflow-y: auto;
 }
 
-/* OVERVIEW BLOCKS */
+/* OVERVIEW NODES STYLE */
 .metrics-grid {
     display: flex;
     gap: 20px;
@@ -156,12 +196,7 @@
     text-transform: uppercase;
 }
 
-.metric-value {
-    font-size: 32px;
-    font-weight: 700;
-    margin: 0;
-}
-
+.metric-value { font-size: 32px; font-weight: 700; margin: 0; }
 .static-success { color: #10b981; }
 
 .system-notice-box {
@@ -198,10 +233,7 @@
     margin-bottom: 12px;
 }
 
-.client-name {
-    font-weight: 600;
-    font-size: 15px;
-}
+.client-name { font-weight: 600; font-size: 15px; }
 
 .delete-record-btn {
     background: transparent;
@@ -212,16 +244,8 @@
     transition: color 0.2s ease;
 }
 
-.delete-record-btn:hover {
-    color: #ef4444;
-}
-
-.card-contact-details {
-    font-size: 13px;
-    color: #94a3b8;
-    margin-bottom: 14px;
-}
-
+.delete-record-btn:hover { color: #ef4444; }
+.card-contact-details { font-size: 13px; color: #94a3b8; margin-bottom: 14px; }
 .card-contact-details p { margin: 4px 0; }
 
 .card-message-body {
@@ -238,4 +262,73 @@
     color: #64748b;
     padding: 60px 0;
     font-size: 15px;
+}
+
+/* ==========================================================
+   MOBILE MEDIA QUERY RULES (Viewports up to 768px wide)
+   ========================================================== */
+@media (max-width: 768px) {
+    .mobile-top-bar {
+        display: flex; /* Expose app top navigation strip */
+    }
+
+    .dashboard-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        height: 100%;
+        transform: translateX(-100%); /* Stash drawer layout outward out of view boundaries */
+        box-shadow: 20px 0 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .dashboard-sidebar.drawer-open {
+        transform: translateX(0); /* Slide drawer view back in to match menu clicks */
+    }
+
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        z-index: 120;
+    }
+
+    .dashboard-workspace {
+        padding-top: 60px; /* Cushion main space away from mobile top-bar header */
+        width: 100%;
+    }
+
+    .workspace-header {
+        display: none; /* Hide wide desktop status layout row */
+    }
+
+    .workspace-scroll-grid {
+        padding: 20px 16px; /* Narrow padding metrics on mobile devices */
+    }
+
+    .metrics-grid {
+        flex-direction: column; /* Stack total records cards on top of each other */
+        gap: 14px;
+    }
+
+    .metric-card {
+        padding: 18px;
+    }
+
+    .metric-value {
+        font-size: 26px;
+    }
+
+    .system-notice-box {
+        padding: 20px;
+    }
+
+    .card-meta-row {
+        flex-direction: row;
+        align-items: center;
+    }
 }

@@ -9,6 +9,7 @@ function AdminDashboard({ setCurrentPage }) {
   const [inquiries, setInquiries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("overview");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // Toggle state for mobile slide-out panel
 
   // Fetch submitted customer information logs from Firebase Realtime Database
   useEffect(() => {
@@ -17,12 +18,11 @@ function AdminDashboard({ setCurrentPage }) {
     const unsubscribe = onValue(contactRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        // Map objects into an array with keys included
         const formattedData = Object.keys(data).map((key) => ({
           id: key,
           ...data[key],
         }));
-        setInquiries(formattedData.reverse()); // Show newest entries first
+        setInquiries(formattedData.reverse());
       } else {
         setInquiries([]);
       }
@@ -47,17 +47,45 @@ function AdminDashboard({ setCurrentPage }) {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      setCurrentPage("home"); // Redirect back to public view space
+      setCurrentPage("home");
       window.scrollTo({ top: 0, behavior: "instant" });
     } catch (err) {
       console.error("System logout execution exception:", err);
     }
   };
 
+  // Helper utility to switch views and auto-close drawer menu layout on mobile
+  const switchTab = (tabName) => {
+    setActiveTab(tabName);
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <div className="dashboard-layout-container">
-      {/* SIDE CONTROL BAR MODULE */}
-      <aside className="dashboard-sidebar">
+      
+      {/* MOBILE HEADER BAR (Hidden on Desktop) */}
+      <div className="mobile-top-bar">
+        <button 
+          className="mobile-hamburger-btn" 
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label="Toggle Navigation Menu"
+        >
+          {isMobileMenuOpen ? "✕" : "☰"}
+        </button>
+        <div className="mobile-bar-title">
+          <h3>MS Electronics</h3>
+          <span className="system-tag">Console</span>
+        </div>
+        <div className="mobile-status-dot"></div>
+      </div>
+
+      {/* OVERLAY GLASS LAYER FOR CLOSING DRAWER CONSOLE */}
+      {isMobileMenuOpen && (
+        <div className="sidebar-overlay" onClick={() => setIsMobileMenuOpen(false)}></div>
+      )}
+
+      {/* SIDE CONTROL BAR MODULE (Transforms to sliding drawer panel on mobile) */}
+      <aside className={`dashboard-sidebar ${isMobileMenuOpen ? "drawer-open" : ""}`}>
         <div className="sidebar-branding">
           <div className="brand-shield">📡</div>
           <div>
@@ -69,20 +97,20 @@ function AdminDashboard({ setCurrentPage }) {
         <nav className="sidebar-nav">
           <button 
             className={`nav-item-btn ${activeTab === "overview" ? "active" : ""}`}
-            onClick={() => setActiveTab("overview")}
+            onClick={() => switchTab("overview")}
           >
             📊 System Overview
           </button>
           <button 
             className={`nav-item-btn ${activeTab === "inquiries" ? "active" : ""}`}
-            onClick={() => setActiveTab("inquiries")}
+            onClick={() => switchTab("inquiries")}
           >
             ✉️ Client Inquiries ({inquiries.length})
           </button>
         </nav>
 
         <button onClick={handleLogout} className="sidebar-logout-btn">
-          🚪 Terminate Session (Logout)
+          🚪 Terminate Session
         </button>
       </aside>
 
