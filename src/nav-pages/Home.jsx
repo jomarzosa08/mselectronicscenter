@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react'
+import { database } from '../firebase.js' // Adjust this path if your firebase.js is located elsewhere
+import { ref, onValue } from 'firebase/database'
 import '../index.css'
 import './Home.css'  
 
 function Home({ setCurrentPage }) {
   const [activeModalPost, setActiveModalPost] = useState(null)
+  const [journalPosts, setJournalPosts] = useState([])
+  const [loading, setLoading] = useState(true)
 
   // Map each service to its respective page target state identifier
   const services = [
@@ -13,32 +17,33 @@ function Home({ setCurrentPage }) {
     { id: 'srv4', title: 'CCTV Camera Installation', img: 'https://mselectronicscenter.com/wp-content/uploads/2024/04/img_0560.jpeg?w=NaN&h=', pageId: 'home' },
     { id: 'srv5', title: 'Wireless Radio Installation', img: 'https://mselectronicscenter.com/wp-content/uploads/2024/04/img_8371.jpeg?w=NaN&h=', pageId: 'home' },
     { id: 'srv6', title: 'Field Equipments & Products', img: 'https://mselectronicscenter.com/wp-content/uploads/2024/04/img_7562.jpeg?w=NaN&h=', pageId: 'home' }
-    
-  ]
-
-  const journalPosts = [
-    {
-      id: 'post1',
-      category: 'Communication',
-      date: 'May 25, 2026',
-      readTime: '3 min read',
-      title: 'Barangay Wireless Radio Network Deployment Across Cebu Mountain Districts',
-      img: 'https://mselectronicscenter.com/wp-content/uploads/2026/01/img_6782.jpeg?w=768',
-      desc: 'We successfully completed the setup of a multi-site critical communication network spanning rural and mountainous barangays in Cebu. This network ensures a reliable lifeline during natural disasters.'
-    },
-    {
-      id: 'post2',
-      category: 'Surveillance',
-      date: 'May 12, 2026',
-      readTime: '2 min read',
-      title: 'High-Definition CCTV Command Center Integration Deployed for Enterprise Client',
-      img: 'https://mselectronicscenter.com/wp-content/uploads/2026/01/c364e3e7be1bf64275cfe32bccb5b5da.jpeg?w=768',
-      desc: 'MS Electronics Center deployed a comprehensive enterprise surveillance matrix for a commercial facility in urban Cebu.'
-    }
   ]
 
   const doubledServices = [...services, ...services]
 
+  // 1. Fetch Real-time Updates from Firebase
+  useEffect(() => {
+    const updatesRef = ref(database, 'updates');
+    
+    const unsubscribe = onValue(updatesRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        const formattedUpdates = Object.keys(data).map((key) => ({
+          id: key,
+          ...data[key],
+        }));
+        // Sort by latest timestamp so new posts appear first
+        setJournalPosts(formattedUpdates.reverse());
+      } else {
+        setJournalPosts([]);
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // 2. Setup IntersectionObserver scroll reveals
   useEffect(() => {
     const reveals = document.querySelectorAll('.reveal')
     const observerOptions = { root: null, threshold: 0.1 }
@@ -53,7 +58,7 @@ function Home({ setCurrentPage }) {
 
     reveals.forEach((element) => revealObserver.observe(element))
     return () => reveals.forEach((element) => revealObserver.unobserve(element))
-  }, [])
+  }, [journalPosts, loading]) // Re-run observer when dynamic content loads to catch new elements
 
   return (
     <>
@@ -107,7 +112,6 @@ function Home({ setCurrentPage }) {
         <div className="expertise-carousel-viewport" id="expertise-gallery">
           <div className="expertise-track">
             {doubledServices.map((service, index) => (
-              /* 1. Moved onClick here to make the entire background image card clickable */
               <div 
                 key={`${service.id}-${index}`}
                 className="expertise-bleed-card" 
@@ -118,12 +122,11 @@ function Home({ setCurrentPage }) {
                 }}
                 style={{ 
                   '--bg-image': `url('${service.img}')`,
-                  cursor: 'pointer' // Changes mouse cursor to indicator across the whole image surface
+                  cursor: 'pointer'
                 }}
               >
                 <div className="bleed-card-inner">
                   <h3>{service.title}</h3>
-                  {/* 2. Turned this back into a clean visual span tracker since the wrapper handles the click event now */}
                   <span className="bleed-card-action">
                     Read More <span>→</span>
                   </span>
@@ -142,31 +145,50 @@ function Home({ setCurrentPage }) {
               <span className="news-tag-line">MS Electronics Journal</span>
               <h2 className="news-main-title">Latest Updates &amp; Field Reports</h2>
             </div>
-            <div className="news-ticker-date">Updated: May 2026</div>
+            <div className="news-ticker-date">
+              {journalPosts.length > 0 ? `Latest: ${journalPosts[0].date}` : "Live Feed"}
+            </div>
           </div>
           
-          <div className="news-matrix-grid">
-            {journalPosts.map((post) => (
-              <article 
-                key={post.id}
-                className="news-post-card update-card reveal fade-in"
-                onClick={() => setActiveModalPost(post)}
-              >
-                <div className="news-img-frame">
-                  <img src={post.img} alt={post.title} className="news-cover" />
-                  <span className="news-category-badge">{post.category}</span>
-                </div>
-                <div className="news-body">
-                  <div className="news-meta-row">
-                    <span>{post.date}</span>
-                    <span> • {post.readTime}</span>
-                  </div>
-                  <h3 className="news-headline">{post.title}</h3>
-                  <button className="read-update-btn">Read Full Article</button>
-                </div>
-              </article>
-            ))}
-          </div>
+          {loading ? (
+            <div style={{ color: '#94a3b8', textAlign: 'center', padding: '40px 0' }}>
+              Synchronizing with database...
+            </div>
+          ) : journalPosts.length === 0 ? (
+            <div style={{ color: '#94a3b8', textAlign: 'center', padding: '40px 0' }}>
+              No field updates published yet.
+            </div>
+          ) : (
+            <div className="news-matrix-grid">
+              {journalPosts.map((post) => {
+                // Safeguard check: Grab first image from the array, or use a clean placeholder
+                const coverImage = post.images && post.images.length > 0 
+                  ? post.images[0] 
+                  : "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800";
+
+                return (
+                  <article 
+                    key={post.id}
+                    className="news-post-card update-card reveal fade-in"
+                    onClick={() => setActiveModalPost(post)}
+                  >
+                    <div className="news-img-frame">
+                      <img src={coverImage} alt={post.title} className="news-cover" />
+                      <span className="news-category-badge">{post.category}</span>
+                    </div>
+                    <div className="news-body">
+                      <div className="news-meta-row">
+                        <span>{post.date}</span>
+                        <span> • {post.readTime}</span>
+                      </div>
+                      <h3 className="news-headline">{post.title}</h3>
+                      <button className="read-update-btn">Read Full Article</button>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 
@@ -178,13 +200,27 @@ function Home({ setCurrentPage }) {
             <div className="update-modal-content">
               <div className="modal-left-column">
                 <div className="modal-img-frame">
-                  <img src={activeModalPost.img} alt={activeModalPost.title} />
+                  <img 
+                    src={activeModalPost.images && activeModalPost.images.length > 0 
+                      ? activeModalPost.images[0] 
+                      : "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800"
+                    } 
+                    alt={activeModalPost.title} 
+                  />
                 </div>
               </div>
               <div className="modal-right-column">
-                <span className="modal-post-date">{activeModalPost.date}</span>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '8px' }}>
+                  <span className="news-category-badge" style={{ position: 'static', transform: 'none' }}>
+                    {activeModalPost.category}
+                  </span>
+                  <span className="modal-post-date" style={{ margin: 0 }}>{activeModalPost.date} • {activeModalPost.readTime}</span>
+                </div>
                 <h2 className="modal-post-title">{activeModalPost.title}</h2>
-                <div className="modal-post-description">{activeModalPost.desc}</div>
+                {/* Maps 'content' field generated by admin console */}
+                <div className="modal-post-description" style={{ whiteSpace: 'pre-wrap' }}>
+                  {activeModalPost.content || activeModalPost.desc}
+                </div>
               </div>
             </div>
           </div>
