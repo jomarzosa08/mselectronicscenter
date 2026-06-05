@@ -228,3 +228,25 @@ body.dark .footer {
     body.dark .nav-links { background-color: #070a13; }
     .nav-links.open { transform: translateX(0); }
 }
+
+/* ==========================================================================
+   ADMIN PANEL INTERFACE PATCH (CLEARS STUBBORN WHITE SPACE MARGIN)
+   ========================================================================== */
+
+/* Overrides the global body spacing dynamically when admin panels mount */
+body:has(.admin-isolated-view) {
+    padding-top: 0 !important;
+    background-color: #090d16; /* Seamlessly matches your dark console engine background */
+}
+
+/* Force layout canvas to pin perfectly flush with the absolute top window boundary */
+.admin-isolated-view {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+}

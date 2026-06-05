@@ -22,7 +22,8 @@ function MainApp() {
       {/* Render Header only if NOT in an administrative control screen */}
       {!isAdminView && <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />}
       
-      <main>
+      {/* Added dynamic class assignment to remove native margins/padding on admin panels */}
+      <main className={isAdminView ? "admin-isolated-view" : "public-view"}>
         {currentPage === 'home' && <Home setCurrentPage={setCurrentPage} />}
         {currentPage === 'about' && <About setCurrentPage={setCurrentPage} />}
         {currentPage === 'contact' && <Contact />}

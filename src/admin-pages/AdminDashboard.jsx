@@ -73,7 +73,7 @@ function AdminDashboard({ setCurrentPage }) {
           {isMobileMenuOpen ? "✕" : "☰"}
         </button>
         <div className="mobile-bar-title">
-          <h3>MS Electronics</h3>
+          <h3>MS Electronics Center</h3>
           <span className="system-tag">Console</span>
         </div>
         <div className="mobile-status-dot"></div>
@@ -89,7 +89,7 @@ function AdminDashboard({ setCurrentPage }) {
         <div className="sidebar-branding">
           <div className="brand-shield">📡</div>
           <div>
-            <h3>MS Electronics</h3>
+            <h3>MS Electronics Center</h3>
             <span className="system-tag">Admin Console</span>
           </div>
         </div>
