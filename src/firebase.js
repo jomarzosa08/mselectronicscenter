@@ -1,8 +1,9 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApp, getApps } from "firebase/app"; // <-- UPDATED: Added getApp and getApps
 import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getDatabase } from 'firebase/database';
+// 1. IMPORT AUTH UTILITIES
+import { getAuth } from 'firebase/auth';
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -17,6 +18,12 @@ const firebaseConfig = {
   measurementId: "G-0KLNY0JR4Y"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+// Initialize Firebase safely without throwing duplicate application node errors
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+
+// Optional: Initialize analytics if you plan to use it in your app
+const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
+
+export const database = getDatabase(app);
+// 2. EXPORT THE AUTH INSTANCE
+export const auth = getAuth(app);

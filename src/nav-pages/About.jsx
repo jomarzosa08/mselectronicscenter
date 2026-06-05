@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import '../index.css' // Steps out to root src/ folder
 import './About.css'  // Local styling sheet for About page
 
-function About() {
+function About({ setCurrentPage }) { // <-- Added setCurrentPage parameter to receive routing control
   // State to manage the active enlarged modal image
   const [activeImage, setActiveImage] = useState(null);
 
@@ -35,6 +35,12 @@ function About() {
   const closeModal = () => {
     setActiveImage(null);
     document.body.style.overflow = ''; // Unlock background scroll grid
+  };
+
+  // Safe navigation intercept handler to target the login state cleanly
+  const navigateToLogin = () => {
+    setCurrentPage('login');
+    window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
   return (
@@ -204,6 +210,16 @@ function About() {
 
         </div>
       </section>
+
+      {/* FIXED FLOATING ACTION BUTTON FOR CONSOLE ACCESS */}
+      <button 
+        className="admin-terminal-floating-btn" 
+        onClick={navigateToLogin}
+        title="Access Administrative Control Console"
+      >
+        <span className="terminal-btn-icon">🔒</span>
+        Login to Admin
+      </button>
 
       {/* GLOBAL LIGHTBOX MODAL PORTAL */}
       {activeImage && (
