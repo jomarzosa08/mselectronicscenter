@@ -415,21 +415,83 @@ body.light {
   }
 }
 
-/* ==========================================
-   MODAL LAYOUT ENGINE USING SYSTEM THEMES
-   ========================================== */
+/* ==========================================================================
+   THEME VARIABLE INFRASTRUCTURE (MODAL)
+   ========================================================================== */
+:root {
+  /* Default Dark Mode Color Tokens */
+  --modal-overlay-bg: rgba(10, 10, 12, 0.75);
+  --modal-wrapper-bg: #111215;
+  --modal-media-bg: #0a0a0c;
+  --modal-border: rgba(255, 255, 255, 0.07);
+  --modal-inner-border: rgba(255, 255, 255, 0.04);
+  --modal-text-primary: #f8fafc;
+  --modal-text-secondary: #94a3b8;
+  --modal-text-muted: #64748b;
+  --modal-btn-bg: rgba(255, 255, 255, 0.04);
+  --modal-btn-border: rgba(255, 255, 255, 0.08);
+  --modal-arrow-bg: rgba(15, 15, 18, 0.6);
+  --modal-arrow-hover: rgba(15, 15, 18, 0.9);
+  --modal-pill-container-bg: rgba(17, 18, 21, 0.7);
+  --modal-pill-inactive: rgba(255, 255, 255, 0.25);
+  --modal-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  --modal-divider: rgba(255, 255, 255, 0.1);
+}
+
+/* Light Mode Overrides (Triggers via classes or data-attributes) */
+[data-theme="light"],
+.light-mode,
+body.light {
+  --modal-overlay-bg: rgba(241, 245, 249, 0.8);
+  --modal-wrapper-bg: #ffffff;
+  --modal-media-bg: #f8fafc;
+  --modal-border: rgba(15, 23, 42, 0.08);
+  --modal-inner-border: rgba(15, 23, 42, 0.04);
+  --modal-text-primary: #0f172a;
+  --modal-text-secondary: #475569;
+  --modal-text-muted: #94a3b8;
+  --modal-btn-bg: rgba(15, 23, 42, 0.03);
+  --modal-btn-border: rgba(15, 23, 42, 0.06);
+  --modal-arrow-bg: rgba(255, 255, 255, 0.75);
+  --modal-arrow-hover: rgba(255, 255, 255, 0.95);
+  --modal-pill-container-bg: rgba(255, 255, 255, 0.85);
+  --modal-pill-inactive: rgba(15, 23, 42, 0.2);
+  --modal-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.08);
+  --modal-divider: rgba(15, 23, 42, 0.08);
+}
+
+/* Auto-detect OS Light System Preference Fallback */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]):not(.dark-mode) {
+    --modal-overlay-bg: rgba(241, 245, 249, 0.8);
+    --modal-wrapper-bg: #ffffff;
+    --modal-media-bg: #f8fafc;
+    --modal-border: rgba(15, 23, 42, 0.08);
+    --modal-inner-border: rgba(15, 23, 42, 0.04);
+    --modal-text-primary: #0f172a;
+    --modal-text-secondary: #475569;
+    --modal-text-muted: #94a3b8;
+    --modal-btn-bg: rgba(15, 23, 42, 0.03);
+    --modal-btn-border: rgba(15, 23, 42, 0.06);
+    --modal-arrow-bg: rgba(255, 255, 255, 0.75);
+    --modal-arrow-hover: rgba(255, 255, 255, 0.95);
+    --modal-pill-container-bg: rgba(255, 255, 255, 0.85);
+    --modal-pill-inactive: rgba(15, 23, 42, 0.2);
+    --modal-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.08);
+    --modal-divider: rgba(15, 23, 42, 0.08);
+  }
+}
+
+/* ==========================================================================
+   DESKTOP CORE INTERFACE STYLES (Split 2-Column Grid)
+   ========================================================================== */
 
 .pointer-btn {
   border: none;
   cursor: pointer;
 }
 
-.feed-status-message {
-  color: var(--modal-text-secondary);
-  text-align: center;
-  padding: 40px 0;
-}
-
+/* Modal Backdrop Blur Overlay */
 .minimal-modal-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -444,6 +506,7 @@ body.light {
   transition: background-color 0.3s ease;
 }
 
+/* Main Container Frame Wrapper */
 .minimal-modal-wrapper {
   position: relative;
   width: 100%;
@@ -456,6 +519,7 @@ body.light {
   transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Elegant Minimal Circular Close Button */
 .minimal-modal-close-btn {
   position: absolute;
   top: 24px; right: 24px;
@@ -478,6 +542,7 @@ body.light {
   background-color: var(--modal-btn-border);
 }
 
+/* Content Grid System Split Layout */
 .minimal-modal-content-grid {
   display: grid;
   grid-template-columns: 1.2fr 1fr;
@@ -485,12 +550,13 @@ body.light {
   max-height: 82vh;
 }
 
+/* Left Media Column Block */
 .minimal-modal-media-side {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--modal-media-bg);
+  background-color: var(--modal-media-bg);
   overflow: hidden;
   border-right: 1px solid var(--modal-inner-border);
   transition: background-color 0.3s ease, border-color 0.3s ease;
@@ -511,6 +577,7 @@ body.light {
   border-radius: 8px;
 }
 
+/* Minimal Translucent Carousel Control Arrows */
 .minimal-carousel-arrow {
   position: absolute;
   width: 44px; height: 44px;
@@ -535,6 +602,7 @@ body.light {
 .arrow-left { left: 12px; }
 .arrow-right { right: 12px; }
 
+/* Dynamic Carousel Sliding Navigation Pills */
 .minimal-carousel-pill-indicators {
   position: absolute;
   bottom: 20px; left: 50%;
@@ -559,11 +627,13 @@ body.light {
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Morphing Selected Pill Highlight State */
 .active-pill {
   width: 18px;
-  background: #3b82f6; /* Beautiful minimal blue accent remains constant across states */
+  background: #3b82f6; /* Modern Blue Accent */
 }
 
+/* Right Text Meta-Information Panel Column */
 .minimal-modal-info-side {
   display: flex;
   flex-direction: column;
@@ -621,14 +691,116 @@ body.light {
   letter-spacing: 0.1px;
 }
 
+/* ==========================================================================
+   RESPONSIVE MOBILE MODAL OVERHAUL (Opaque, Solid Layer Handling)
+   ========================================================================== */
 @media (max-width: 768px) {
+  .minimal-modal-overlay {
+    padding: 12px;
+    align-items: flex-end; /* Slides up like a native system bottom sheet */
+  }
+
+  /* Force solid opaque base coat styles on wrapper container classes */
+  .minimal-modal-wrapper {
+    max-height: 92vh;
+    border-radius: 20px 20px 0 0;
+    border-bottom: none;
+    background-color: var(--modal-wrapper-bg) !important;
+    box-shadow: var(--modal-shadow);
+  }
+
+  /* Stack columns cleanly into rows and block lower layers from bleeding through */
   .minimal-modal-content-grid {
     grid-template-columns: 1fr;
-    max-height: 90vh;
+    grid-template-rows: auto 1fr;
+    min-height: unset;
+    max-height: 92vh;
+    background-color: var(--modal-wrapper-bg); 
   }
+
+  /* Media Section Mobile Dimensions */
   .minimal-modal-media-side {
     border-right: none;
     border-bottom: 1px solid var(--modal-inner-border);
+    height: 38vh;
+    background-color: var(--modal-media-bg) !important;
+  }
+
+  .minimal-modal-img-container {
+    padding: 16px;
+    width: 100%; height: 100%;
+    background-color: var(--modal-media-bg);
+  }
+
+  .minimal-modal-active-img {
+    max-height: 34vh;
+    width: auto;
+    object-fit: contain;
+  }
+
+  /* Scaled-down UI buttons for mobile dimensions */
+  .minimal-carousel-arrow {
+    width: 36px; height: 36px;
+    font-size: 16px;
+  }
+  
+  .arrow-left { left: 8px; }
+  .arrow-right { right: 8px; }
+
+  .minimal-carousel-pill-indicators {
+    bottom: 12px;
+    padding: 4px 8px;
+  }
+
+  .minimal-modal-close-btn {
+    top: 12px; right: 12px;
+    width: 34px; height: 34px;
+    font-size: 12px;
+    background: rgba(15, 15, 18, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: 1px solid var(--modal-border);
+  }
+
+  /* Info Context Mobile Typography Parameters */
+  .minimal-modal-info-side {
+    padding: 24px 20px 40px 20px;
+    overflow-y: auto;
+    background-color: var(--modal-wrapper-bg) !important;
+    -webkit-overflow-scrolling: touch; /* Momentum scrolling engine */
+  }
+
+  .minimal-modal-meta-row {
+    margin-bottom: 12px;
+    gap: 8px;
+  }
+
+  .minimal-modal-category-badge {
+    font-size: 10px;
+    padding: 2px 8px;
+  }
+
+  .minimal-modal-date-text {
+    font-size: 11px;
+    color: var(--modal-text-muted);
+  }
+
+  .minimal-modal-headline {
+    font-size: 20px;
+    line-height: 1.4;
+    margin-bottom: 16px;
+    color: var(--modal-text-primary);
+  }
+
+  .minimal-modal-divider {
+    margin-bottom: 16px;
+    background-color: var(--modal-divider);
+  }
+
+  .minimal-modal-body-text {
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--modal-text-secondary);
   }
 }
 
