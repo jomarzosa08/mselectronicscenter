@@ -4,7 +4,8 @@ import { ref, onValue } from 'firebase/database'
 import '../index.css'
 import './Home.css'  
 
-function Home({ setCurrentPage }) {
+// Destructured setSelectedServiceId from props to pass the active selection back to MainApp
+function Home({ setCurrentPage, setSelectedServiceId }) {
   const [activeModalPost, setActiveModalPost] = useState(null)
   const [activeImageIndex, setActiveImageIndex] = useState(0) 
   const [journalPosts, setJournalPosts] = useState([])
@@ -123,9 +124,10 @@ function Home({ setCurrentPage }) {
                 key={`${service.id}-${index}`}
                 className="expertise-bleed-card pointer-btn" 
                 onClick={() => {
-                  if (service.pageId !== 'home') {
-                    setCurrentPage(service.pageId);
-                  }
+                  // Directs routing flow to image_0438e6.png split-screen style template
+                  setSelectedServiceId(service.id);
+                  setCurrentPage('expertise');
+                  window.scrollTo({ top: 0, behavior: 'instant' });
                 }}
                 style={{ '--bg-image': `url('${service.img}')` }}
               >
