@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react'
-import { database } from '../firebase.js' // Adjust this path if your firebase.js is located elsewhere
+import { database } from '../firebase.js' 
 import { ref, onValue } from 'firebase/database'
 import '../index.css'
 import './Home.css'  
 
 function Home({ setCurrentPage }) {
   const [activeModalPost, setActiveModalPost] = useState(null)
+  const [activeImageIndex, setActiveImageIndex] = useState(0) 
   const [journalPosts, setJournalPosts] = useState([])
   const [loading, setLoading] = useState(true)
 
-  // Map each service to its respective page target state identifier
   const services = [
     { id: 'srv1', title: 'Digital/Analog Trunking Repeater System', img: 'https://mselectronicscenter.com/wp-content/uploads/2024/04/img_7803.jpeg', pageId: 'repeater' },
     { id: 'srv2', title: 'Solar Panel Systems', img: 'https://mselectronicscenter.com/wp-content/uploads/2024/04/img_5723.jpeg?w=NaN&h=', pageId: 'home' },
@@ -21,7 +21,6 @@ function Home({ setCurrentPage }) {
 
   const doubledServices = [...services, ...services]
 
-  // 1. Fetch Real-time Updates from Firebase
   useEffect(() => {
     const updatesRef = ref(database, 'updates');
     
@@ -32,8 +31,18 @@ function Home({ setCurrentPage }) {
           id: key,
           ...data[key],
         }));
-        // Sort by latest timestamp so new posts appear first
-        setJournalPosts(formattedUpdates.reverse());
+        
+        const sortedUpdates = formattedUpdates.sort((a, b) => {
+          const dateA = new Date(a.date).getTime();
+          const dateB = new Date(b.date).getTime();
+          
+          if (dateB !== dateA) {
+            return dateB - dateA;
+          }
+          return (b.timestamp || 0) - (a.timestamp || 0);
+        });
+
+        setJournalPosts(sortedUpdates);
       } else {
         setJournalPosts([]);
       }
@@ -43,7 +52,6 @@ function Home({ setCurrentPage }) {
     return () => unsubscribe();
   }, []);
 
-  // 2. Setup IntersectionObserver scroll reveals
   useEffect(() => {
     const reveals = document.querySelectorAll('.reveal')
     const observerOptions = { root: null, threshold: 0.1 }
@@ -58,7 +66,7 @@ function Home({ setCurrentPage }) {
 
     reveals.forEach((element) => revealObserver.observe(element))
     return () => reveals.forEach((element) => revealObserver.unobserve(element))
-  }, [journalPosts, loading]) // Re-run observer when dynamic content loads to catch new elements
+  }, [journalPosts, loading])
 
   return (
     <>
@@ -81,8 +89,7 @@ function Home({ setCurrentPage }) {
                 setCurrentPage('contact');
                 window.scrollTo({ top: 0, behavior: 'instant' });
               }} 
-              className="hero-cta-btn"
-              style={{ border: 'none', cursor: 'pointer' }}
+              className="hero-cta-btn pointer-btn"
             >
               Contact Us Now <span className="cta-arrow">→</span>
             </button>
@@ -114,16 +121,13 @@ function Home({ setCurrentPage }) {
             {doubledServices.map((service, index) => (
               <div 
                 key={`${service.id}-${index}`}
-                className="expertise-bleed-card" 
+                className="expertise-bleed-card pointer-btn" 
                 onClick={() => {
                   if (service.pageId !== 'home') {
                     setCurrentPage(service.pageId);
                   }
                 }}
-                style={{ 
-                  '--bg-image': `url('${service.img}')`,
-                  cursor: 'pointer'
-                }}
+                style={{ '--bg-image': `url('${service.img}')` }}
               >
                 <div className="bleed-card-inner">
                   <h3>{service.title}</h3>
@@ -151,17 +155,16 @@ function Home({ setCurrentPage }) {
           </div>
           
           {loading ? (
-            <div style={{ color: '#94a3b8', textAlign: 'center', padding: '40px 0' }}>
+            <div className="feed-status-message">
               Synchronizing with database...
             </div>
           ) : journalPosts.length === 0 ? (
-            <div style={{ color: '#94a3b8', textAlign: 'center', padding: '40px 0' }}>
+            <div className="feed-status-message">
               No field updates published yet.
             </div>
           ) : (
             <div className="news-matrix-grid">
               {journalPosts.map((post) => {
-                // Safeguard check: Grab first image from the array, or use a clean placeholder
                 const coverImage = post.images && post.images.length > 0 
                   ? post.images[0] 
                   : "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800";
@@ -170,7 +173,10 @@ function Home({ setCurrentPage }) {
                   <article 
                     key={post.id}
                     className="news-post-card update-card reveal fade-in"
-                    onClick={() => setActiveModalPost(post)}
+                    onClick={() => {
+                      setActiveImageIndex(0);
+                      setActiveModalPost(post);
+                    }}
                   >
                     <div className="news-img-frame">
                       <img src={coverImage} alt={post.title} className="news-cover" />
@@ -192,36 +198,93 @@ function Home({ setCurrentPage }) {
         </div>
       </section>
 
-      {/* MODAL VIEW */}
+      {/* MODERN MINIMALIST THEMED MODAL */}
       {activeModalPost && (
-        <div className="update-modal active" role="dialog">
-          <div className="update-modal-container">
-            <button className="update-modal-close" onClick={() => setActiveModalPost(null)}>✕</button>
-            <div className="update-modal-content">
-              <div className="modal-left-column">
-                <div className="modal-img-frame">
+        <div className="minimal-modal-overlay" role="dialog">
+          <div className="minimal-modal-wrapper">
+            
+            {/* Elegant Minimal Close Button */}
+            <button className="minimal-modal-close-btn" onClick={() => setActiveModalPost(null)}>
+              ✕
+            </button>
+
+            <div className="minimal-modal-content-grid">
+              
+              {/* LEFT SIDE: MINIMAL MEDIA VIEWER */}
+              <div className="minimal-modal-media-side">
+                <div className="minimal-modal-img-container">
                   <img 
                     src={activeModalPost.images && activeModalPost.images.length > 0 
-                      ? activeModalPost.images[0] 
+                      ? activeModalPost.images[activeImageIndex] 
                       : "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800"
                     } 
                     alt={activeModalPost.title} 
+                    className="minimal-modal-active-img"
                   />
                 </div>
+
+                {/* Carousel UI Controls */}
+                {activeModalPost.images && activeModalPost.images.length > 1 && (
+                  <>
+                    <button 
+                      type="button" 
+                      className="minimal-carousel-arrow arrow-left"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActiveImageIndex((prev) => (prev === 0 ? activeModalPost.images.length - 1 : prev - 1));
+                      }}
+                    >
+                      ‹
+                    </button>
+
+                    <button 
+                      type="button" 
+                      className="minimal-carousel-arrow arrow-right"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActiveImageIndex((prev) => (prev === activeModalPost.images.length - 1 ? 0 : prev + 1));
+                      }}
+                    >
+                      ›
+                    </button>
+
+                    {/* Modern Dynamic Pill Indicators */}
+                    <div className="minimal-carousel-pill-indicators">
+                      {activeModalPost.images.map((_, dotIdx) => (
+                        <button
+                          key={dotIdx}
+                          type="button"
+                          onClick={() => setActiveImageIndex(dotIdx)}
+                          className={`minimal-carousel-pill ${dotIdx === activeImageIndex ? 'active-pill' : ''}`}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
-              <div className="modal-right-column">
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '8px' }}>
-                  <span className="news-category-badge" style={{ position: 'static', transform: 'none' }}>
+              
+              {/* RIGHT SIDE: TEXT METADATA PANEL */}
+              <div className="minimal-modal-info-side">
+                <div className="minimal-modal-meta-row">
+                  <span className="minimal-modal-category-badge">
                     {activeModalPost.category}
                   </span>
-                  <span className="modal-post-date" style={{ margin: 0 }}>{activeModalPost.date} • {activeModalPost.readTime}</span>
+                  <span className="minimal-modal-date-text">
+                    {activeModalPost.date} &nbsp;•&nbsp; {activeModalPost.readTime}
+                  </span>
                 </div>
-                <h2 className="modal-post-title">{activeModalPost.title}</h2>
-                {/* Maps 'content' field generated by admin console */}
-                <div className="modal-post-description" style={{ whiteSpace: 'pre-wrap' }}>
+
+                <h2 className="minimal-modal-headline">
+                  {activeModalPost.title}
+                </h2>
+
+                <div className="minimal-modal-divider" />
+
+                <div className="minimal-modal-body-text">
                   {activeModalPost.content || activeModalPost.desc}
                 </div>
               </div>
+
             </div>
           </div>
         </div>
@@ -230,4 +293,4 @@ function Home({ setCurrentPage }) {
   )
 }
 
-export default Home
+export default Home;
