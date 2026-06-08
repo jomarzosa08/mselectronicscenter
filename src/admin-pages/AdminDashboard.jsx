@@ -14,7 +14,7 @@ function AdminDashboard({ setCurrentPage }) {
 
   // Journal form states
   const [postTitle, setPostTitle] = useState("");
-  const [postContent, setPostContent] = useState("");
+  const [postContent, setPostContent] = useState(""); // Optional field
   const [postCategory, setPostCategory] = useState("Communication");
   
   // Date configuration state (Defaults to today yyyy-mm-dd format natively)
@@ -139,8 +139,10 @@ function AdminDashboard({ setCurrentPage }) {
 
   const handleCreatePost = async (e) => {
     e.preventDefault();
-    if (!postTitle.trim() || !postContent.trim()) {
-      alert("Please populate the journal title and content body.");
+    
+    // CONTENT REMOVED FROM THIS CONDITIONAL CHECK -> IT IS NOW OPTIONAL
+    if (!postTitle.trim()) {
+      alert("Please populate the journal title heading.");
       return;
     }
 
@@ -149,10 +151,16 @@ function AdminDashboard({ setCurrentPage }) {
       const updatesRef = ref(database, "updates");
       const newPostRef = push(updatesRef);
 
-      const wordsPerMinute = 200; 
-      const wordCount = postContent.trim().split(/\s+/).length;
-      const computedMinutes = Math.max(1, Math.ceil(wordCount / wordsPerMinute));
-      const finalReadTimeStr = `${computedMinutes} min read`;
+      // Read time computation logic with fallback for empty/short texts
+      let finalReadTimeStr = "1 min read";
+      const cleanContent = postContent.trim();
+      
+      if (cleanContent) {
+        const wordsPerMinute = 200; 
+        const wordCount = cleanContent.split(/\s+/).length;
+        const computedMinutes = Math.max(1, Math.ceil(wordCount / wordsPerMinute));
+        finalReadTimeStr = `${computedMinutes} min read`;
+      }
 
       const dateParts = postDate.split("-");
       const cleanFormattedDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2])
@@ -160,7 +168,7 @@ function AdminDashboard({ setCurrentPage }) {
 
       await set(newPostRef, {
         title: postTitle,
-        content: postContent,
+        content: cleanContent, // Saves as pristine text or empty string "" safely
         category: postCategory.toUpperCase(),
         readTime: finalReadTimeStr, 
         images: imagePool.length > 0 ? imagePool : ["https://images.unsplash.com/photo-1518770660439-4636190af475?w=800"], 
@@ -171,7 +179,7 @@ function AdminDashboard({ setCurrentPage }) {
       setPostTitle("");
       setPostContent("");
       setImagePool([]);
-      alert("Journal card cluster committed successfully!");
+      alert("Journal card committed successfully!");
     } catch (err) {
       alert("Failed to commit post node entry to cloud cluster.");
     } finally {
@@ -313,7 +321,7 @@ function AdminDashboard({ setCurrentPage }) {
                     </div>
                   </div>
 
-                  {/* ADVANCED MULTIPLE IMAGE INTERACTION MODULE WITH COMPRESSION INDICATOR */}
+                  {/* ADVANCED MULTIPLE IMAGE INTERACTION MODULE */}
                   <div className="form-input-block image-interaction-box">
                     <label>Display Card Image Cover Repository ({imagePool.length} Loaded)</label>
                     <div className="image-toggle-selector">
@@ -380,10 +388,10 @@ function AdminDashboard({ setCurrentPage }) {
                   </div>
 
                   <div className="form-input-block">
-                    <label>Article Context / Content Paragraph Body</label>
+                    <label>Article Context / Content Paragraph Body <span style={{ color: '#64748b', fontSize: '12px', fontWeight: 'normal' }}>(Optional)</span></label>
                     <textarea 
                       rows="6" 
-                      placeholder="Write detailed summaries here. Read time computes automatically..."
+                      placeholder="Write detailed summaries here (Leave blank if you only want to post images/title)..."
                       value={postContent}
                       onChange={(e) => setPostContent(e.target.value)}
                     ></textarea>
