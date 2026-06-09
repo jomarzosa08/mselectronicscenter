@@ -4,7 +4,6 @@ import { ref, onValue } from 'firebase/database'
 import '../index.css'
 import './Home.css'  
 
-// Destructured setSelectedServiceId from props to pass the active selection back to MainApp
 function Home({ setCurrentPage, setSelectedServiceId }) {
   const [activeModalPost, setActiveModalPost] = useState(null)
   const [activeImageIndex, setActiveImageIndex] = useState(0) 
@@ -22,6 +21,7 @@ function Home({ setCurrentPage, setSelectedServiceId }) {
 
   const doubledServices = [...services, ...services]
 
+  // Effect 1: Core Real-time Database Event Stream
   useEffect(() => {
     const updatesRef = ref(database, 'updates');
     
@@ -53,21 +53,30 @@ function Home({ setCurrentPage, setSelectedServiceId }) {
     return () => unsubscribe();
   }, []);
 
+  // Effect 2: Safe Scroll Animation Node Tracking Execution
   useEffect(() => {
+    // If database contents are still downloading, hold off until nodes render
+    if (loading) return;
+
     const reveals = document.querySelectorAll('.reveal')
     const observerOptions = { root: null, threshold: 0.1 }
 
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          entry.target.classList.add('active')
+          entry.target.classList.add('active');
+          // Once visible, stop tracking to prevent re-triggering animation loops
+          revealObserver.unobserve(entry.target);
         }
       })
     }, observerOptions)
 
     reveals.forEach((element) => revealObserver.observe(element))
-    return () => reveals.forEach((element) => revealObserver.unobserve(element))
-  }, [journalPosts, loading])
+    
+    return () => {
+      reveals.forEach((element) => revealObserver.unobserve(element));
+    };
+  }, [loading, journalPosts]); // Triggers cleanly once right after components finish painting
 
   return (
     <>
@@ -124,7 +133,6 @@ function Home({ setCurrentPage, setSelectedServiceId }) {
                 key={`${service.id}-${index}`}
                 className="expertise-bleed-card pointer-btn" 
                 onClick={() => {
-                  // Directs routing flow to image_0438e6.png split-screen style template
                   setSelectedServiceId(service.id);
                   setCurrentPage('expertise');
                   window.scrollTo({ top: 0, behavior: 'instant' });
@@ -205,14 +213,13 @@ function Home({ setCurrentPage, setSelectedServiceId }) {
         <div className="minimal-modal-overlay" role="dialog">
           <div className="minimal-modal-wrapper">
             
-            {/* Elegant Minimal Close Button */}
             <button className="minimal-modal-close-btn" onClick={() => setActiveModalPost(null)}>
               ✕
             </button>
 
             <div className="minimal-modal-content-grid">
               
-              {/* LEFT SIDE: MINIMAL MEDIA VIEWER */}
+              {/* LEFT SIDE: MEDIA VIEWER */}
               <div className="minimal-modal-media-side">
                 <div className="minimal-modal-img-container">
                   <img 
@@ -225,7 +232,6 @@ function Home({ setCurrentPage, setSelectedServiceId }) {
                   />
                 </div>
 
-                {/* Carousel UI Controls */}
                 {activeModalPost.images && activeModalPost.images.length > 1 && (
                   <>
                     <button 
@@ -250,7 +256,6 @@ function Home({ setCurrentPage, setSelectedServiceId }) {
                       ›
                     </button>
 
-                    {/* Modern Dynamic Pill Indicators */}
                     <div className="minimal-carousel-pill-indicators">
                       {activeModalPost.images.map((_, dotIdx) => (
                         <button
@@ -265,7 +270,7 @@ function Home({ setCurrentPage, setSelectedServiceId }) {
                 )}
               </div>
               
-              {/* RIGHT SIDE: TEXT METADATA PANEL */}
+              {/* RIGHT SIDE: METADATA PANEL */}
               <div className="minimal-modal-info-side">
                 <div className="minimal-modal-meta-row">
                   <span className="minimal-modal-category-badge">

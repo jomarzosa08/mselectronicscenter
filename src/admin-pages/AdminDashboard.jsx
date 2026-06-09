@@ -14,10 +14,10 @@ function AdminDashboard({ setCurrentPage }) {
 
   // Journal form states
   const [postTitle, setPostTitle] = useState("");
-  const [postContent, setPostContent] = useState(""); // Optional field
+  const [postContent, setPostContent] = useState(""); 
   const [postCategory, setPostCategory] = useState("Communication");
   
-  // Date configuration state (Defaults to today yyyy-mm-dd format natively)
+  // Date configuration state
   const [postDate, setPostDate] = useState(() => {
     const today = new Date();
     const yyyy = today.getFullYear();
@@ -28,14 +28,25 @@ function AdminDashboard({ setCurrentPage }) {
 
   // Multitasking Multiple Image Selection Arrays
   const [imageSourceType, setImageSourceType] = useState("link"); 
-  const [imagePool, setImagePool] = useState([]); // Dynamic collection array holding image paths
+  const [imagePool, setImagePool] = useState([]); 
   const [singleLinkInput, setSingleLinkInput] = useState("");
   const [isPublishing, setIsPublishing] = useState(false);
 
+  // Clean Real-Time Stream Synchronization Effect Block
   useEffect(() => {
     const contactRef = ref(database, "contacts");
     const updatesRef = ref(database, "updates");
     
+    // Flags to orchestrate loading lifecycle resolution safely
+    let contactsLoaded = false;
+    let updatesLoaded = false;
+
+    const checkLoadingState = () => {
+      if (contactsLoaded && updatesLoaded) {
+        setLoading(false);
+      }
+    };
+
     const unsubscribeContacts = onValue(contactRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
@@ -43,10 +54,17 @@ function AdminDashboard({ setCurrentPage }) {
           id: key,
           ...data[key],
         }));
+        // Only trigger update if length or keys mismatch to avoid layout re-eval cycles
         setInquiries(formattedData.reverse());
       } else {
         setInquiries([]);
       }
+      contactsLoaded = true;
+      checkLoadingState();
+    }, (error) => {
+      console.error("Firebase inquiries read error: ", error);
+      contactsLoaded = true;
+      checkLoadingState();
     });
 
     const unsubscribeUpdates = onValue(updatesRef, (snapshot) => {
@@ -60,14 +78,20 @@ function AdminDashboard({ setCurrentPage }) {
       } else {
         setUpdates([]);
       }
-      setLoading(false);
+      updatesLoaded = true;
+      checkLoadingState();
+    }, (error) => {
+      console.error("Firebase updates read error: ", error);
+      updatesLoaded = true;
+      checkLoadingState();
     });
 
+    // Tear-down mechanism prevents overlapping connection listener cascades
     return () => {
       unsubscribeContacts();
       unsubscribeUpdates();
     };
-  }, []);
+  }, []); // Explicitly anchored safely to mounting cycle execution layer
 
   // Utility logic to compress images using HTML5 Canvas
   const compressImageFile = (file) => {
@@ -80,7 +104,6 @@ function AdminDashboard({ setCurrentPage }) {
         img.onload = () => {
           const canvas = document.createElement("canvas");
           
-          // Set maximum dimensional constraint thresholds for fluid rendering
           const MAX_WIDTH = 1000; 
           const MAX_HEIGHT = 750;
           let width = img.width;
@@ -104,7 +127,6 @@ function AdminDashboard({ setCurrentPage }) {
           const ctx = canvas.getContext("2d");
           ctx.drawImage(img, 0, 0, width, height);
 
-          // Export as compressed image/jpeg at 0.6 quality value parameter 
           const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.6);
           resolve(compressedDataUrl);
         };
@@ -112,7 +134,6 @@ function AdminDashboard({ setCurrentPage }) {
     });
   };
 
-  // Multi-image file extractor engine with integrated compressor stream
   const handleMultipleImageUpload = async (e) => {
     const files = Array.from(e.target.files);
     
@@ -124,7 +145,7 @@ function AdminDashboard({ setCurrentPage }) {
         console.error("Compression processing glitch: ", err);
       }
     }
-    e.target.value = null; // Flush input node target
+    e.target.value = null; 
   };
 
   const appendImageLinkToPool = () => {
@@ -140,7 +161,6 @@ function AdminDashboard({ setCurrentPage }) {
   const handleCreatePost = async (e) => {
     e.preventDefault();
     
-    // CONTENT REMOVED FROM THIS CONDITIONAL CHECK -> IT IS NOW OPTIONAL
     if (!postTitle.trim()) {
       alert("Please populate the journal title heading.");
       return;
@@ -151,7 +171,6 @@ function AdminDashboard({ setCurrentPage }) {
       const updatesRef = ref(database, "updates");
       const newPostRef = push(updatesRef);
 
-      // Read time computation logic with fallback for empty/short texts
       let finalReadTimeStr = "1 min read";
       const cleanContent = postContent.trim();
       
@@ -168,7 +187,7 @@ function AdminDashboard({ setCurrentPage }) {
 
       await set(newPostRef, {
         title: postTitle,
-        content: cleanContent, // Saves as pristine text or empty string "" safely
+        content: cleanContent, 
         category: postCategory.toUpperCase(),
         readTime: finalReadTimeStr, 
         images: imagePool.length > 0 ? imagePool : ["https://images.unsplash.com/photo-1518770660439-4636190af475?w=800"], 
@@ -203,6 +222,14 @@ function AdminDashboard({ setCurrentPage }) {
     setActiveTab(tabName);
     setIsMobileMenuOpen(false);
   };
+
+  if (loading) {
+    return (
+      <div className="admin-loading-screen" style={{display:'flex', justifyContent:'center', alignItems:'center', height:'100vh', background:'#0f172a', color:'#fff'}}>
+        <div className="spinner">Optimizing Terminal Connection Matrix...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="dashboard-layout-container">
@@ -243,7 +270,7 @@ function AdminDashboard({ setCurrentPage }) {
           </button>
         </nav>
 
-        <button onClick={() => { auth.signOut(); setCurrentPage("home"); }} className="sidebar-logout-btn">
+        <button onClick={async () => { try { await auth.signOut(); setCurrentPage("home"); } catch(e) { console.error(e); } }} className="sidebar-logout-btn">
           🚪 Terminate Session
         </button>
       </aside>
