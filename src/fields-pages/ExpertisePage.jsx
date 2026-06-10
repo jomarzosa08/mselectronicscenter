@@ -1,10 +1,15 @@
-import React, { useEffect } from 'react';
-import Footer from '../Footer.jsx'; 
+// src/pages/ExpertisePage.jsx
+import React, { useEffect, useState } from 'react';
+import { database } from '../firebase.js';
+import { ref, onValue } from 'firebase/database';
 import './ExpertisePage.css';
 
-function ExpertisePage({ services, activeServiceId, setActiveServiceId, setCurrentPage }) {
-  
-  // Resets the right view scrollbar container position every time menu choice updates
+function ExpertisePage({ services, activeServiceId, setActiveServiceId }) {
+  const [galleryImages, setGalleryImages] = useState([]);
+  const [loadingGallery, setLoadingGallery] = useState(true);
+  const [lightboxImage, setLightboxImage] = useState(null); 
+
+  // Resets layout viewport scroll position on tab changes
   useEffect(() => {
     const contentPanel = document.querySelector('.fields-main-content-viewport');
     if (contentPanel) {
@@ -13,11 +18,51 @@ function ExpertisePage({ services, activeServiceId, setActiveServiceId, setCurre
   }, [activeServiceId]);
 
   const currentService = services.find(srv => srv.id === activeServiceId) || services[0];
+  const currentServiceTitle = currentService?.title || "Field Deployment Gallery";
+
+  // Optimized Real-Time Firebase Stream
+  useEffect(() => {
+    setLoadingGallery(true);
+    const galleryRef = ref(database, 'expertise_gallery');
+
+    const unsubscribe = onValue(galleryRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        const parsedImages = [];
+        
+        Object.keys(data).forEach((key) => {
+          const block = data[key];
+          
+          if (block.serviceId === activeServiceId && block.images) {
+            block.images.forEach((imgUrl, index) => {
+              if (imgUrl) {
+                parsedImages.push({
+                  id: `${key}-${index}`,
+                  url: imgUrl,
+                  title: block.title || currentServiceTitle
+                });
+              }
+            });
+          }
+        });
+
+        setGalleryImages(parsedImages.reverse()); 
+      } else {
+        setGalleryImages([]);
+      }
+      setLoadingGallery(false);
+    }, (error) => {
+      console.error("Firebase fetch error: ", error);
+      setLoadingGallery(false);
+    });
+
+    return () => unsubscribe();
+  }, [activeServiceId, currentServiceTitle]);
 
   return (
     <div className="fields-split-layout-engine">
       
-      {/* SIDEBAR NAVIGATION PANEL (FIXED) */}
+      {/* SIDEBAR NAVIGATION PANEL */}
       <aside className="fields-sidebar-nav">
         <div className="fields-sidebar-header">
           FIELD OF EXPERTISE
@@ -36,68 +81,71 @@ function ExpertisePage({ services, activeServiceId, setActiveServiceId, setCurre
         </nav>
       </aside>
 
-      {/* INDEPENDENTLY SCROLLABLE CONTENT VIEWPORT */}
+      {/* ISOLATED GALLERY VIEWPORT */}
       <section className="fields-main-content-viewport">
-        
         <div className="fields-content-wrapper">
-          {/* Main Display Image */}
-          <div className="fields-hero-banner">
-            <img 
-              src={currentService.img} 
-              alt={currentService.title} 
-              className="fields-hero-image"
-            />
-            <div className="fields-hero-title-tint">
-              <h1>{currentService.title}</h1>
-            </div>
-          </div>
-
-          <div className="fields-article-body">
-            {/* Intro Lead Paragraph */}
-            <p className="fields-lead-paragraph">
-              {currentService.leadText}
-            </p>
+          <div className="fields-gallery-container">
             
-            <p>
-              Our field solutions emphasize robust engineering structures designed to keep equipment running safely and consistently under demanding environments.
-            </p>
-
-            {/* Dynamic Locations Mapping */}
-            {currentService.locations && currentService.locations.map((loc, idx) => (
-              <div key={idx} className="fields-location-block">
-                <h2 className="fields-section-subtitle">{loc.name}</h2>
-                <p>{loc.description}</p>
-              </div>
-            ))}
-
-            {/* Dynamic Functions Grid Section */}
-            {currentService.functions && (
-              <div className="fields-functions-section">
-                <h2 className="fields-section-subtitle">Functions</h2>
-                <div className="fields-functions-grid">
-                  {currentService.functions.map((func, idx) => (
-                    <div key={idx} className="fields-function-card">
-                      <h3>{func.title}</h3>
-                      <p>{func.text}</p>
+            <header className="gallery-header-block">
+              <h1 className="fields-main-gallery-title">
+                {currentServiceTitle}
+              </h1>
+              <p className="gallery-header-subtitle">
+                Project Deployments &amp; Operational Gallery Records
+              </p>
+            </header>
+            
+            {loadingGallery ? (
+              <p className="gallery-status-msg">Loading latest console attachments...</p>
+            ) : galleryImages.length === 0 ? (
+              <p className="gallery-status-msg text-muted">No operational deployment images uploaded for this category yet.</p>
+            ) : (
+              <div className="fields-gallery-masonry-grid">
+                {galleryImages.map((image) => (
+                  <div 
+                    key={image.id} 
+                    className="fields-gallery-card" 
+                    onClick={() => setLightboxImage(image)}
+                  >
+                    <img src={image.url} alt={image.title} loading="lazy" />
+                    <div className="fields-gallery-card-overlay">
+                      <span>{image.title}</span>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
               </div>
             )}
+          </div>
+        </div>
+      </section>
 
-            {/* Quality Standard Info Footnote Box */}
-            <div className="fields-specs-callout-box">
-              <h3>Technical Execution Standards</h3>
-              <ul>
-                <li>Industrial-grade durability materials provisioned.</li>
-                <li>Rigorous site calibrations and signal/power optimization testing routines.</li>
-                <li>Comprehensive field report and deployment metrics logbooks.</li>
-              </ul>
+      {/* LIGHTBOX MODAL FOR VIEWING ENLARGED PHOTOS */}
+      {lightboxImage && (
+        <div 
+          className="gallery-lightbox-overlay" 
+          onClick={() => setLightboxImage(null)}
+        >
+          <div 
+            className="gallery-lightbox-content" 
+            onClick={(e) => e.stopPropagation()} 
+          >
+            <button 
+              className="gallery-lightbox-close-btn" 
+              onClick={() => setLightboxImage(null)}
+            >
+              ✕
+            </button>
+            <img 
+              src={lightboxImage.url} 
+              alt={lightboxImage.title} 
+              className="gallery-lightbox-image"
+            />
+            <div className="gallery-lightbox-caption">
+              {lightboxImage.title}
             </div>
           </div>
         </div>
-
-      </section>
+      )}
 
     </div>
   );
