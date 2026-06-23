@@ -3,16 +3,21 @@ import './index.css'
 
 // CRITICAL: Ensure { currentPage, setCurrentPage } are listed inside the parentheses here!
 function Header({ currentPage, setCurrentPage }) {
-  const [isDarkMode, setIsDarkMode] = useState(false)
-  const [isNavOpen, setIsNavOpen] = useState(false)
+  // Lazy initialize state from localStorage to preserve dark mode toggle across browser refreshes
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    return localStorage.getItem('ms_dark_mode') === 'true';
+  });
+  const [isNavOpen, setIsNavOpen] = useState(false);
 
   useEffect(() => {
     if (isDarkMode) {
-      document.body.classList.add('dark')
+      document.body.classList.add('dark');
+      localStorage.setItem('ms_dark_mode', 'true');
     } else {
-      document.body.classList.remove('dark')
+      document.body.classList.remove('dark');
+      localStorage.setItem('ms_dark_mode', 'false');
     }
-  }, [isDarkMode])
+  }, [isDarkMode]);
 
   // Custom click handler to tell main.jsx to change the view
   const handlePageSwitch = (e, targetPage) => {
@@ -37,7 +42,7 @@ function Header({ currentPage, setCurrentPage }) {
         </div>
       </div>
 
-      {/* Your updated navigation links block */}
+      {/* Navigation links block synchronized with your clean state matrix */}
       <nav className={`nav-links ${isNavOpen ? 'open' : ''}`} id="nav-links">
         <a 
           href="#" 
@@ -60,17 +65,13 @@ function Header({ currentPage, setCurrentPage }) {
         >
           Contact Us
         </a>
-
-        {/* <a href="#" onClick={() => setIsNavOpen(false)}>Products</a> */}
-
         <a
           href="#"
-          className={currentPage === 'partnership' ? 'active-nav' : ''}
-          onClick={(e) => handlePageSwitch(e, 'partnership')}
+          className={currentPage === 'expertise' ? 'active-nav' : ''}
+          onClick={(e) => handlePageSwitch(e, 'expertise')}
         >
           Partnerships
         </a>
-        
       </nav>
 
       <div className="nav-actions">

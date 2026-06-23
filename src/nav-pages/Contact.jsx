@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
-import '../index.css' // Steps back up one folder level to hit root src/
-import './Contact.css'  // Local folder styling for Contact view
+import '../index.css'
+import './Contact.css'
 
 function Contact() {
   useEffect(() => {
@@ -105,7 +105,7 @@ function Contact() {
               <div className="fb-connect-box">
                 <p>Feel free to reach out to us instantly through our social helpdesk platform:</p>
                 <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="fb-consult-btn">
-                  <span className="fb-icon">f</span> Message Us on Facebook
+                  <span className="fb-icon"></span> Message Us on Facebook
                 </a>
               </div>
             </div>
