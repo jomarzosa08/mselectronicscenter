@@ -6,12 +6,12 @@ MS Electronics Center is a premier communications equipment dealer in the Philip
 Contact us for Consultation:
 
 Melchor L. Abad
-
-Landline No.    : 346-9758 | 345-5928
-Mobile Hotline  : 0919 991 6724
-Email Addresses : melchorabad@mselectronicscenter.com
-                  ms_electronicscenter@yahoo.com
-Official Website: [@MS Electronics Center](https://mselectronicscenter.vercel.app/)
+- Landline No.    : 346-9758 | 345-5928
+- Mobile Hotline  : 0919 991 6724
+- Email Addresses : melchorabad@mselectronicscenter.com
+                    ms_electronicscenter@yahoo.com
+- Official Website: [MS Electronics Center](https://mselectronicscenter.vercel.app/)
+- Facebook Page   :
 
 Currently, two official plugins are available:
 
