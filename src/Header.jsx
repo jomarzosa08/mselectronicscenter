@@ -67,8 +67,8 @@ function Header({ currentPage, setCurrentPage }) {
         </a>
         <a
           href="#"
-          className={currentPage === 'expertise' ? 'active-nav' : ''}
-          onClick={(e) => handlePageSwitch(e, 'expertise')}
+          className={currentPage === 'partnership' ? 'active-nav' : ''}
+          onClick={(e) => handlePageSwitch(e, 'partnership')}
         >
           Partnerships
         </a>
