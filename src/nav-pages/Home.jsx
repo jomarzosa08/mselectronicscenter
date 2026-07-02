@@ -123,7 +123,12 @@ function Home({ setCurrentPage, setSelectedServiceId }) {
         <div className="expertise-header-block">
           <span className="expertise-subtitle">What We Do Best</span>
           <h2 className="expertise-main-title">Field of Expertise</h2>
-          <a href="#expertise-gallery" className="expertise-global-link">Explore Services</a>
+          <a href="#expertise-gallery" className="expertise-global-link"
+              onClick={() => {
+                    setCurrentPage('expertise');
+                    window.scrollTo({ top: 0, behavior: 'instant' });
+                  }} 
+          >Explore Services</a>
         </div>
 
         <div className="expertise-carousel-viewport" id="expertise-gallery">
